@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dfhkajmnrfny3"]
+
+[ext_resource type="Script" uid="uid://bn6gu4308q52c" path="res://utilities/WarpArea.gd" id="1_36ujr"]
+
+[node name="WarpArea" type="Area2D" unique_id=114113438]
+script = ExtResource("1_36ujr")
