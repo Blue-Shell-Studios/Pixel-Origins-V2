@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://b86hfk10hd6ae"]
+
+[ext_resource type="Script" uid="uid://cmsmtomnxflbs" path="res://entities/camp/enemy_camp.gd" id="1_cxv07"]
+
+[node name="EnemyCamp" type="Node2D" unique_id=1295559734]
+script = ExtResource("1_cxv07")
+
+[node name="Positions" type="Node2D" parent="." unique_id=1067355724]
+
+[node name="Pos1" type="Node2D" parent="Positions" unique_id=1838090553]
+position = Vector2(5, 17)
+
+[node name="Pos2" type="Node2D" parent="Positions" unique_id=1726687900]
+position = Vector2(-13, -2)
+
+[node name="Pos3" type="Node2D" parent="Positions" unique_id=1348982102]
+position = Vector2(13, 5)
+
+[node name="Pos4" type="Node2D" parent="Positions" unique_id=2129213496]
+position = Vector2(-11, 15)
+
+[node name="Pos5" type="Node2D" parent="Positions" unique_id=44188596]
+position = Vector2(7, -11)
+
+[node name="Pos6" type="Node2D" parent="Positions" unique_id=1964787591]
+position = Vector2(-10, -20)

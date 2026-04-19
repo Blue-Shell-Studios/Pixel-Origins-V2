@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dfex4074y0qp5"]
+
+[ext_resource type="Script" uid="uid://crj8slbglm2s6" path="res://entities/player/player.gd" id="1_abrql"]
+[ext_resource type="PackedScene" uid="uid://cknh3itecx5fj" path="res://entities/human/human.tscn" id="1_symyc"]
+[ext_resource type="Script" uid="uid://cmqcby5pj51v2" path="res://entities/player/states/idle_state.gd" id="2_sglur"]
+[ext_resource type="Script" uid="uid://nxfre6hfxxgm" path="res://entities/player/states/attack_state.gd" id="3_bls4j"]
+
+[node name="Player" type="Node2D" unique_id=193436335]
+script = ExtResource("1_abrql")
+
+[node name="PlayerStates" type="Node2D" parent="." unique_id=629528879]
+
+[node name="IdleState" type="Node2D" parent="PlayerStates" unique_id=682823954]
+script = ExtResource("2_sglur")
+metadata/_custom_type_script = "uid://bstwk2vpvl0yd"
+
+[node name="AttackState" type="Node2D" parent="PlayerStates" unique_id=1660853524]
+script = ExtResource("3_bls4j")
+metadata/_custom_type_script = "uid://bstwk2vpvl0yd"
+
+[node name="Human" parent="." unique_id=288422975 instance=ExtResource("1_symyc")]

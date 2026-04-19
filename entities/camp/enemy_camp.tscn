@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://b86hfk10hd6ae"]
+
+[ext_resource type="Script" uid="uid://cmsmtomnxflbs" path="res://entities/camp/enemy_camp.gd" id="1_cxv07"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cxv07"]
+radius = 64.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_8gq5q"]
+radius = 160.0
+
+[node name="EnemyCamp" type="Node2D" unique_id=1295559734]
+script = ExtResource("1_cxv07")
+
+[node name="Vision" type="Area2D" parent="." unique_id=239663814]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Vision" unique_id=1899224958]
+shape = SubResource("CircleShape2D_cxv07")
+
+[node name="AgroZone" type="Area2D" parent="." unique_id=1241011181]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AgroZone" unique_id=429989359]
+shape = SubResource("CircleShape2D_8gq5q")
+
+[connection signal="body_entered" from="Vision" to="." method="_on_vision_body_entered"]
+[connection signal="body_exited" from="Vision" to="." method="_on_vision_body_exited"]
+[connection signal="body_exited" from="AgroZone" to="." method="_on_agro_zone_body_exited"]

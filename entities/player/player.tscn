@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://dfex4074y0qp5"]
+
+[ext_resource type="Script" uid="uid://crj8slbglm2s6" path="res://entities/player/player.gd" id="1_abrql"]
+[ext_resource type="PackedScene" uid="uid://cknh3itecx5fj" path="res://entities/human/human.tscn" id="1_symyc"]
+[ext_resource type="Script" uid="uid://cmqcby5pj51v2" path="res://entities/player/states/idle_state.gd" id="2_sglur"]
+[ext_resource type="Script" uid="uid://nxfre6hfxxgm" path="res://entities/player/states/attack_state.gd" id="3_bls4j"]
+[ext_resource type="Script" uid="uid://bbcxus34rugog" path="res://entities/player/states/walking_state.gd" id="4_fkugw"]
+[ext_resource type="Script" uid="uid://bdxvhxquj2ee" path="res://entities/player/states/running_state.gd" id="5_8fjmc"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fkugw"]
+radius = 4.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8fjmc"]
+size = Vector2(24, 18)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qiwj3"]
+size = Vector2(8, 15)
+
+[node name="Player" type="CharacterBody2D" unique_id=853934024]
+z_index = 1
+script = ExtResource("1_abrql")
+
+[node name="PlayerStates" type="Node2D" parent="." unique_id=629528879]
+
+[node name="IdleState" type="Node2D" parent="PlayerStates" unique_id=682823954]
+script = ExtResource("2_sglur")
+metadata/_custom_type_script = "uid://bstwk2vpvl0yd"
+
+[node name="AttackState" type="Node2D" parent="PlayerStates" unique_id=1660853524]
+script = ExtResource("3_bls4j")
+metadata/_custom_type_script = "uid://bstwk2vpvl0yd"
+
+[node name="WalkingState" type="Node2D" parent="PlayerStates" unique_id=942831385]
+script = ExtResource("4_fkugw")
+metadata/_custom_type_script = "uid://bstwk2vpvl0yd"
+
+[node name="RunningState" type="Node2D" parent="PlayerStates" unique_id=1297373117]
+script = ExtResource("5_8fjmc")
+metadata/_custom_type_script = "uid://bstwk2vpvl0yd"
+
+[node name="Human" parent="." unique_id=288422975 instance=ExtResource("1_symyc")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1018029707]
+shape = SubResource("CircleShape2D_fkugw")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1616508046]
+zoom = Vector2(2, 2)
+
+[node name="Sword" type="Area2D" parent="." unique_id=427152196]
+position = Vector2(16, -8)
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sword" unique_id=1217100137]
+shape = SubResource("RectangleShape2D_8fjmc")
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=814079457]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1838125034]
+position = Vector2(0, -7.5)
+shape = SubResource("RectangleShape2D_qiwj3")
+
+[connection signal="area_entered" from="Sword" to="." method="_on_sword_area_entered"]
