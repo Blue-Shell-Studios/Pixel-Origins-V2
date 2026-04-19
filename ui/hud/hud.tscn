@@ -1,0 +1,99 @@
+[gd_scene format=3 uid="uid://b0r4bgji6i3d8"]
+
+[ext_resource type="Script" uid="uid://ba0v5qrclmyba" path="res://ui/hud/hud.gd" id="1_4d6w6"]
+[ext_resource type="FontFile" uid="uid://js78wjypxcro" path="res://assets/fonts/PixelOperator8.ttf" id="1_xmswo"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_4d6w6"]
+font = ExtResource("1_xmswo")
+font_size = 24
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mn2u8"]
+bg_color = Color(0.12, 0.12, 0.12, 0.9)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oyf3e"]
+bg_color = Color(0.88, 0.18, 0.18, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="HUD" type="CanvasLayer" unique_id=691228065]
+script = ExtResource("1_4d6w6")
+
+[node name="TopLeft" type="MarginContainer" parent="." unique_id=488424663]
+offset_right = 200.0
+offset_bottom = 56.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TopLeft" unique_id=200713035]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="HealthLabel" type="Label" parent="TopLeft/VBoxContainer" unique_id=659673005]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_xmswo")
+theme_override_font_sizes/font_size = 16
+text = "HP 100/100"
+
+[node name="HealthBar" type="ProgressBar" parent="TopLeft/VBoxContainer" unique_id=1802922792]
+custom_minimum_size = Vector2(180, 14)
+layout_mode = 2
+value = 100.0
+show_percentage = false
+theme_override_styles/background = SubResource("StyleBoxFlat_mn2u8")
+theme_override_styles/fill = SubResource("StyleBoxFlat_oyf3e")
+
+[node name="Bottom" type="MarginContainer" parent="." unique_id=1952355989]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -53.0
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Label" type="Label" parent="Bottom" unique_id=843350404]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_4d6w6")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameOver" type="Control" parent="." unique_id=214635312]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Backdrop" type="ColorRect" parent="GameOver" unique_id=661485839]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.75)
+
+[node name="Center" type="CenterContainer" parent="GameOver" unique_id=765684211]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Message" type="Label" parent="GameOver/Center" unique_id=99935122]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("1_xmswo")
+text = "GAME OVER\nPress Enter to restart"
+horizontal_alignment = 1
