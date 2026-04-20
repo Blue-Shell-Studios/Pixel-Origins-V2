@@ -18,7 +18,7 @@ size = Vector2(8, 15)
 
 [node name="Player" type="CharacterBody2D" unique_id=853934024]
 z_index = 1
-position = Vector2(288, 193)
+position = Vector2(44, 164)
 script = ExtResource("1_abrql")
 
 [node name="PlayerStates" type="Node2D" parent="." unique_id=629528879]
