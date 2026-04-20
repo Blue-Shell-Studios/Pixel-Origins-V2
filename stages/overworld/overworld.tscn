@@ -3514,7 +3514,7 @@ tile_map_data = PackedByteArray("AAAAAAAAAAABAAMAAAAAAAEAAAABAAMAAAAAAAIAAAABAAM
 tile_set = SubResource("TileSet_48q14")
 
 [node name="Landmark" type="TileMapLayer" parent="TileMapLayers" unique_id=678664495]
-tile_map_data = PackedByteArray("AAAKAAIAAAAdAAwAAAAKAAMAAAAdAA0AAAALAAIAAAAeAAwAAAALAAMAAAAeAA0AAAAMAAIAAAAfAAwAAAAMAAMAAAAfAA0AAAARAAkAAAA3AAEAAAARAAoAAAA3AAIAAAASAAkAAAA4AAEAAAASAAoAAAA4AAIAAAATAAkAAAA5AAEAAAATAAoAAAA5AAIAAAAUAAkAAAA6AAEAAAASAAsAAAA7AAYAAAATAAsAAAA6AAIAAAAUAAoAAAA6AAIAAAA=")
+tile_map_data = PackedByteArray("AAAKAAIAAAAdAAwAAAAKAAMAAAAdAA0AAAALAAIAAAAeAAwAAAALAAMAAAAeAA0AAAAMAAIAAAAfAAwAAAAMAAMAAAAfAA0AAAARAAkAAAA3AAEAAAARAAoAAAA3AAIAAAASAAkAAAA4AAEAAAASAAoAAAA4AAIAAAASAAsAAAA7AAYAAAATAAkAAAA5AAEAAAATAAoAAAA5AAIAAAATAAsAAAA6AAIAAAAUAAkAAAA6AAEAAAAUAAoAAAA6AAIAAAA=")
 tile_set = SubResource("TileSet_mtk7k")
 
 [node name="Spawns" type="Node2D" parent="." unique_id=2138715306]
@@ -3531,6 +3531,7 @@ shape = SubResource("RectangleShape2D_n2o3d")
 position = Vector2(304, 167)
 script = ExtResource("4_48q14")
 metadata/_custom_type_script = "uid://dxmvwle4b3yxa"
+metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Spawns/Bramblewilds" unique_id=484971226]
 shape = SubResource("RectangleShape2D_e0gtx")

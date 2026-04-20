@@ -71,6 +71,10 @@ func take_damage(amount: int) -> void:
 	
 	if health == 0:
 		SignalBus.player_died.emit()
+		
+func heal_damage(amount: int) -> void:
+	if amount <= 0: return
+	health += amount
 
 func _flash_hurt() -> void:
 	body.modulate = HURT_TINT
