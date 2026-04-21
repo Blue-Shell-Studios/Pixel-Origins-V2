@@ -1,5 +1,5 @@
 class_name Stage extends Node2D
 
+enum Type {MAP, LOCATION, UI}
 
-func _on_south_exits_area_entered(area: Area2D) -> void:
-	pass # Replace with function body.
+var type: Type

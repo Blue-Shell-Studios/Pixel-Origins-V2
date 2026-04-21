@@ -1,4 +1,4 @@
 extends Stage
 
 func _ready() -> void:
-	type = Type.MAP
+	type = Type.LOCATION
