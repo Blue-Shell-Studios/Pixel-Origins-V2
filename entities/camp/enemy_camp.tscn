@@ -12,13 +12,15 @@ radius = 160.0
 script = ExtResource("1_cxv07")
 
 [node name="Vision" type="Area2D" parent="." unique_id=239663814]
+collision_layer = 0
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Vision" unique_id=1899224958]
 shape = SubResource("CircleShape2D_cxv07")
 
 [node name="AgroZone" type="Area2D" parent="." unique_id=1241011181]
-collision_layer = 2
-collision_mask = 2
+collision_layer = 0
+collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AgroZone" unique_id=429989359]
 shape = SubResource("CircleShape2D_8gq5q")

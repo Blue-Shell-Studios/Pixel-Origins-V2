@@ -1,17 +1,17 @@
 extends PlayerState
 
+
 func begin() -> void:
 	player.velocity = Vector2.ZERO
-	player.body.attack()
+	player.play_animation("attack")
 
-	while player.body.tool_sprite.frame < 5:
-		await player.body.tool_sprite.frame_changed
+	while player.sprite.frame < 1:
+		await player.sprite.frame_changed
 
 	player.sword.set_deferred("monitoring", true)
-
-	await player.body.movement_finished
+	await player.sprite.frame_changed
 	player.sword.set_deferred("monitoring", false)
-
+	await player.sprite.animation_finished
 	player.change_state(Player.State.IDLE)
 
 func handle_input() -> void:

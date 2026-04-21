@@ -1,18 +1,20 @@
 extends GoblinState
 
-var attack_last_frame := 0
+var attack_finished : bool
 
 func begin() -> void:
 	goblin.stop()
+	attack_finished = false
 	goblin.sprite.play("attack")
 	
 	while goblin.sprite.frame < 5:
 		await goblin.sprite.frame_changed
-		
+	
 	goblin.sword.set_deferred("monitoring", true)
-	await goblin.sprite.animation_finished
+	await goblin.sprite.frame_changed
 	goblin.sword.set_deferred("monitoring", false)
 	
+	await goblin.sprite.animation_finished
 	goblin.change_state(Goblin.State.RUNNING)
 
 func handle_input() -> void:
@@ -23,6 +25,8 @@ func process(delta: float) -> void:
 
 func end() -> void:
 	pass
+	
+
 
 func _on_sword_area_entered(area: Area2D) -> void:
 	if goblin.state != self or area.name != "Hitbox": return

@@ -18,9 +18,10 @@ const HURT_TINT := Color(1.0, 0.35, 0.35, 1.0)
 	State.ATTACK : $States/AttackState
 }
 
-@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var sprite: AnimatedSprite2D = $Sprite
 @onready var vision: Area2D = $Vision
 @onready var sword: Area2D = $Sword
+@onready var health_bar: ProgressBar = $HealthBar
 
 
 var target_position := Vector2.ZERO
@@ -36,10 +37,15 @@ var health : int :
 
 func _ready() -> void:
 	health = max_health
+	health_bar.max_value = max_health
+	health_bar.value = health
+	_update_health_bar_visibility()
+
 	state = state_dictionary[State.IDLE]
 	state.begin()
 	
 	var parent = get_parent()
+	
 	if parent is EnemyCamp:
 		camp = parent
 		camp_position = global_position
@@ -98,6 +104,8 @@ func take_damage(amount: int) -> void:
 		return
 
 	health -= amount
+	_refresh_health_bar()
+
 	if health == 0:
 		_die()
 		return
@@ -109,9 +117,19 @@ func _die() -> void:
 	
 	if is_instance_valid(camp):
 		camp.monsters.erase(self)
+
+	SignalBus.enemy_killed.emit("goblin")
 	queue_free()
 
 func _flash_hurt() -> void:
 	sprite.modulate = HURT_TINT
 	await get_tree().create_timer(hurt_tint_duration).timeout
 	sprite.modulate = Color.WHITE
+
+func _refresh_health_bar() -> void:
+	health_bar.max_value = max_health
+	health_bar.value = health
+	_update_health_bar_visibility()
+
+func _update_health_bar_visibility() -> void:
+	health_bar.visible = health < max_health

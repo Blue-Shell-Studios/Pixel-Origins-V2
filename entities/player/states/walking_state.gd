@@ -4,7 +4,7 @@ var direction : Vector2
 
 func begin() -> void:
 	direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	player.body.walk()
+	player.play_animation("walk")
 
 func handle_input() -> void:
 	direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
@@ -21,10 +21,16 @@ func handle_input() -> void:
 		player.change_state(Player.State.RUNNING)
 		return
 
-	if direction.x < 0:
+	if direction == Vector2.ZERO:
+		pass
+	elif direction.x < 0:
 		player.look(Util.Direction.LEFT)
 	elif direction.x > 0:
 		player.look(Util.Direction.RIGHT)
+	elif direction.y < 0:
+		player.look(Util.Direction.UP)
+	elif direction.y > 0:
+		player.look(Util.Direction.DOWN)
 	
 func process(delta: float) -> void:
 	player.velocity = direction * player.WALK_SPEED

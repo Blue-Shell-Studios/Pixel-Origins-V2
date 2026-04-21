@@ -265,23 +265,7 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_bic7p"]
-radius = 5.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_health_bg"]
-bg_color = Color(0.14, 0.06, 0.06, 0.95)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-corner_detail = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_health_fill"]
-bg_color = Color(0.92, 0.16, 0.16, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-corner_detail = 2
+radius = 4.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jj2aj"]
 radius = 48.0
@@ -293,8 +277,8 @@ size = Vector2(12, 16)
 size = Vector2(29, 22)
 
 [node name="Goblin" type="CharacterBody2D" unique_id=1923501086]
-collision_layer = 4
-collision_mask = 4
+collision_layer = 2
+collision_mask = 2
 script = ExtResource("1_w1pob")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=671343291]
@@ -302,23 +286,9 @@ position = Vector2(0, -7)
 sprite_frames = SubResource("SpriteFrames_uk0sn")
 animation = &"attack"
 autoplay = "idle"
-frame = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1326452724]
-position = Vector2(0, -4)
 shape = SubResource("CircleShape2D_bic7p")
-
-[node name="HealthBar" type="ProgressBar" parent="." unique_id=2003551080]
-offset_left = -9.0
-offset_top = -22.0
-offset_right = 9.0
-offset_bottom = -19.0
-mouse_filter = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_health_bg")
-theme_override_styles/fill = SubResource("StyleBoxFlat_health_fill")
-max_value = 40.0
-value = 40.0
-show_percentage = false
 
 [node name="States" type="Node2D" parent="." unique_id=459985507]
 
@@ -350,11 +320,10 @@ position = Vector2(0, -8)
 shape = SubResource("RectangleShape2D_jj2aj")
 
 [node name="Sword" type="Area2D" parent="." unique_id=592761761]
-position = Vector2(14, -8)
-collision_layer = 0
-collision_mask = 2
+position = Vector2(20.5, -8)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sword" unique_id=900238633]
+position = Vector2(-6, 0)
 shape = SubResource("RectangleShape2D_7avui")
 
 [connection signal="area_entered" from="Sword" to="States/AttackState" method="_on_sword_area_entered"]
