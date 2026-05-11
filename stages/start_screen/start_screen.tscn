@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://grwu3pkt0qb5"]
 
 [ext_resource type="Script" uid="uid://bdf4nqjmr0cv2" path="res://stages/start_screen/start_screen.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://7mhlf6il2h07" path="res://assets/pixel-meadow-sunset-stockcake.webp" id="2_5v3ae"]
+[ext_resource type="Texture2D" uid="uid://7mhlf6il2h07" path="res://assets/Title Screen Background/pixel-meadow-sunset-stockcake.webp" id="2_5v3ae"]
 [ext_resource type="FontFile" uid="uid://js78wjypxcro" path="res://assets/fonts/PixelOperator8.ttf" id="2_font"]
 [ext_resource type="FontFile" uid="uid://0q2tpaghfflr" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="3_lvdpn"]
 

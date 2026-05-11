@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://blqef7t1rrrvp"]
 
 [ext_resource type="Script" uid="uid://cpawxwov0aouj" path="res://stages/Stage.gd" id="1_0h33j"]
-[ext_resource type="Texture2D" uid="uid://c1m8u6wjejf5y" path="res://assets/tileset/spr_tileset_sunnysideworld_16px.png" id="2_80ltv"]
+[ext_resource type="Texture2D" uid="uid://c1m8u6wjejf5y" path="res://assets/Unused/tileset/spr_tileset_sunnysideworld_16px.png" id="2_80ltv"]
 [ext_resource type="Script" uid="uid://pvoq0wbac387" path="res://stages/tauracre/warps/north_exit.gd" id="3_0uffe"]
 [ext_resource type="PackedScene" uid="uid://bqjhuh0iqstxn" path="res://entities/npc/mayor/village_mayor.tscn" id="4_h4vbp"]
 

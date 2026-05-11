@@ -1,10 +1,10 @@
 [gd_scene format=4 uid="uid://xf1140ihx0yy"]
 
 [ext_resource type="Script" uid="uid://cpawxwov0aouj" path="res://stages/Stage.gd" id="1_wumop"]
-[ext_resource type="Texture2D" uid="uid://c1m8u6wjejf5y" path="res://assets/tileset/spr_tileset_sunnysideworld_16px.png" id="2_hx6v6"]
-[ext_resource type="Texture2D" uid="uid://d4e532mm7gtjv" path="res://assets/tileset/spr_tileset_sunnysideworld_forest_32px.png" id="3_xibda"]
+[ext_resource type="Texture2D" uid="uid://c1m8u6wjejf5y" path="res://assets/Unused/tileset/spr_tileset_sunnysideworld_16px.png" id="2_hx6v6"]
+[ext_resource type="Texture2D" uid="uid://d4e532mm7gtjv" path="res://assets/Unused/tileset/spr_tileset_sunnysideworld_forest_32px.png" id="3_xibda"]
 [ext_resource type="Script" uid="uid://dgenfg76k3s00" path="res://stages/bramblewilds/warp_areas/south_exits.gd" id="4_j8alj"]
-[ext_resource type="Texture2D" uid="uid://5hn0w6gdqhxh" path="res://assets/tileset/Dreamy Land Tileset/Nature_Tileset.png" id="4_mihqk"]
+[ext_resource type="Texture2D" uid="uid://5hn0w6gdqhxh" path="res://assets/Unused/tileset/Dreamy Land Tileset/Nature_Tileset.png" id="4_mihqk"]
 [ext_resource type="PackedScene" uid="uid://b86hfk10hd6ae" path="res://entities/camp/enemy_camp.tscn" id="5_p0p3v"]
 [ext_resource type="PackedScene" uid="uid://k3o6tbkv38j4" path="res://entities/goblin/goblin.tscn" id="6_c05yt"]
 

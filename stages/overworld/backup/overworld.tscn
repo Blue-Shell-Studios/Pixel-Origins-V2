@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://rxrtnnpdlixq"]
 
 [ext_resource type="Script" uid="uid://78x8bq0kdoeb" path="res://stages/overworld/overworld.gd" id="1_3sis5"]
-[ext_resource type="Texture2D" uid="uid://c1m8u6wjejf5y" path="res://assets/tileset/spr_tileset_sunnysideworld_16px.png" id="2_n2o3d"]
+[ext_resource type="Texture2D" uid="uid://c1m8u6wjejf5y" path="res://assets/Unused/tileset/spr_tileset_sunnysideworld_16px.png" id="2_n2o3d"]
 [ext_resource type="Script" uid="uid://csbvr674goxrn" path="res://stages/overworld/landmarks/tauracre.gd" id="3_mtk7k"]
 [ext_resource type="Script" uid="uid://bbhdqodovpom6" path="res://stages/overworld/landmarks/bramblewilds.gd" id="4_48q14"]
 
