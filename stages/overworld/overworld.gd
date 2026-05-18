@@ -18,7 +18,7 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not event.is_action_pressed("ui_accept"):
+	if not event.is_action_pressed("interact"):
 		return
 	if active_entrance == null:
 		return

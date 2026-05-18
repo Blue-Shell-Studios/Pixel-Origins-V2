@@ -5,7 +5,7 @@ signal player_entered(trigger: EntranceTrigger)
 signal player_exited(trigger: EntranceTrigger)
 
 @export var entrance_id: StringName
-@export var prompt_text: String = "Press Enter to enter location"
+@export var prompt_text: String = "Press Interact to enter location"
 @export var target_stage: StringName
 @export var target_spawn: StringName
 @export var player_group: StringName = &"player"

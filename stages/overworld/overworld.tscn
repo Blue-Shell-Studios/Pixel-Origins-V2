@@ -6303,7 +6303,7 @@ horizontal_alignment = 1
 [node name="EnterArea" parent="Landmarks/TauracreLandmark" unique_id=27264367 instance=ExtResource("3_s9bvl")]
 position = Vector2(371, 425)
 entrance_id = &"tauracre"
-prompt_text = "Press Enter to enter Tauracre"
+prompt_text = "Press Interact to enter Tauracre"
 target_stage = &"tauracre"
 target_spawn = &"from_overworld"
 
@@ -6324,7 +6324,7 @@ horizontal_alignment = 1
 [node name="EnterArea" parent="Landmarks/BrambleWildsLandmark" unique_id=1061163618 instance=ExtResource("3_s9bvl")]
 position = Vector2(776, 484)
 entrance_id = &"bramble_wilds"
-prompt_text = "Press Enter to enter Bramble Wilds"
+prompt_text = "Press Interact to enter Bramble Wilds"
 target_stage = &"bramble_wilds"
 target_spawn = &"from_overworld"
 
@@ -6355,7 +6355,7 @@ offset_top = 592.0
 offset_right = 794.0
 offset_bottom = 628.0
 theme_override_font_sizes/font_size = 24
-text = "Press Enter to enter location"
+text = "Press Interact to enter location"
 horizontal_alignment = 1
 
 [editable path="Landmarks/TauracreLandmark/EnterArea"]

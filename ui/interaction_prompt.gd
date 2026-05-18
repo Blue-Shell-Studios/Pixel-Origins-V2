@@ -1,6 +1,6 @@
 extends Label
 
-@export var default_text: String = "Press Enter to Interact"
+@export var default_text: String = "Press Interact to Interact"
 
 
 func _ready() -> void:
@@ -17,6 +17,15 @@ func _on_active_interactable_changed(interactable: Node) -> void:
 		return
 
 	visible = interactable != null
+	if not visible:
+		text = default_text
+		return
+
+	if interactable != null and interactable.has_method("get_interaction_prompt_text"):
+		var prompt_text := String(interactable.get_interaction_prompt_text()).strip_edges()
+		text = prompt_text if not prompt_text.is_empty() else default_text
+	else:
+		text = default_text
 
 
 func _on_dialogue_started(_resource: Resource) -> void:

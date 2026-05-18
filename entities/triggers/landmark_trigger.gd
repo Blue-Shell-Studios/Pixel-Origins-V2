@@ -5,7 +5,7 @@ signal player_entered(trigger: LandmarkTrigger)
 signal player_exited(trigger: LandmarkTrigger)
 
 @export var landmark_id: StringName
-@export var prompt_text: String = "Press Enter to enter location"
+@export var prompt_text: String = "Press Interact to enter location"
 @export var target_stage: StringName
 @export var target_spawn: StringName
 @export var player_group: StringName = &"player"
