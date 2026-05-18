@@ -21,6 +21,7 @@ func interact() -> void:
 	if not _can_player_interact():
 		return
 
+	_record_npc_talk_event()
 	var lines := QuestManager.interact_with_npc_quest(NPC_ID, _nearby_player)
 	if lines.is_empty():
 		super.interact()

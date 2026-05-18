@@ -15,6 +15,7 @@ func interact() -> void:
 	if not _can_player_interact():
 		return
 
+	_record_npc_talk_event()
 	if _is_player_full_health():
 		var full_health_lines := PackedStringArray([
 			"Oh! You're already looking healthy and bright.",

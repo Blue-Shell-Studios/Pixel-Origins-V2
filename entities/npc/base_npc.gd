@@ -7,6 +7,7 @@ signal interaction_entered(npc: BaseNPC)
 signal interaction_exited(npc: BaseNPC)
 
 @export var npc_name: String = "Villager"
+@export var npc_id: StringName = &""
 @export_multiline var fallback_line: String = ""
 @export var dialogue_resource: DialogueResource
 @export var dialogue_start: String = "start"
@@ -32,11 +33,32 @@ func interact() -> void:
 	if not _can_player_interact():
 		return
 
+	_record_npc_talk_event()
 	var resource := _get_or_build_dialogue_resource()
 	if resource == null:
 		return
 
 	DialogueService.start_dialogue(resource, dialogue_start)
+
+
+func get_interaction_prompt_text() -> String:
+	return "Press Interact to Talk"
+
+
+func get_npc_event_id() -> StringName:
+	if not npc_id.is_empty():
+		return npc_id
+	var fallback_id := name.to_snake_case().strip_edges()
+	if fallback_id.is_empty():
+		return &""
+	return StringName(fallback_id)
+
+
+func _record_npc_talk_event() -> void:
+	var id := get_npc_event_id()
+	if id.is_empty():
+		return
+	EventsManager.mark_npc_talked(id)
 
 
 func _on_body_entered(body: Node) -> void:

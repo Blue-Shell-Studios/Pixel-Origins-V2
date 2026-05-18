@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://cn2h2u2s0l45v"]
+
+[ext_resource type="Script" path="res://entities/pickups/world_item_pickup.gd" id="1_world_item"]
+[ext_resource type="Texture2D" path="res://assets/Unused/objects/flasks/flasks_1_1.png" id="2_flask_tex"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(9, 6)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
+radius = 12.0
+
+[node name="WorldItemPickup" type="StaticBody2D"]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_world_item")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -4)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("2_flask_tex")
+
+[node name="BodyCollision" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="InteractArea" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractArea"]
+shape = SubResource("CircleShape2D_interact")

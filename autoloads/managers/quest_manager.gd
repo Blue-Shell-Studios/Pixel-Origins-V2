@@ -70,6 +70,7 @@ func interact_with_npc_quest(npc_id: StringName, player: Node) -> PackedStringAr
 				])
 			_active_npc_quest = quest_id
 			_quest_states[quest_id] = STATE_IN_PROGRESS
+			EventsManager.mark_quest_started(quest_id)
 			npc_quest_state_changed.emit(npc_id)
 			return PackedStringArray([
 				"Bramble Wilds has been crawling with goblins lately.",
@@ -86,6 +87,7 @@ func interact_with_npc_quest(npc_id: StringName, player: Node) -> PackedStringAr
 			if player != null and player.has_method("add_coins"):
 				player.add_coins(reward)
 			_quest_states[quest_id] = STATE_TURNED_IN
+			EventsManager.mark_quest_completed(quest_id)
 			if _active_npc_quest == quest_id:
 				_active_npc_quest = &""
 			npc_quest_state_changed.emit(npc_id)
@@ -116,6 +118,8 @@ func record_enemy_kill(enemy_type: StringName) -> void:
 
 		if _quest_progress[quest_id] >= required:
 			_quest_states[quest_id] = STATE_READY_TO_TURN_IN
+			EventsManager.mark_task_completed(quest_id)
+			EventsManager.mark_event(StringName("quest_ready_to_turn_in/%s" % String(quest_id)))
 			var owner := _find_owner_npc(quest_id)
 			if not owner.is_empty():
 				npc_quest_state_changed.emit(owner)

@@ -15,6 +15,7 @@
 [ext_resource type="Script" uid="uid://dmiu2ax61vtp" path="res://entities/npc/scout_lyra_npc.gd" id="12_lyraq"]
 [ext_resource type="Script" uid="uid://cyp3q37yv3mi7" path="res://entities/npc/shop_keeper_jacob_npc.gd" id="13_jacobshop"]
 [ext_resource type="Script" uid="uid://0b1qcb5s5gu6" path="res://entities/npc/maid_therese_npc.gd" id="14_maidtherese"]
+[ext_resource type="PackedScene" path="res://entities/pickups/world_item_pickup.tscn" id="15_worlditem"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5vmji"]
 texture = ExtResource("2_nvvpd")
@@ -12932,8 +12933,8 @@ region = Rect2(160, 2, 16, 18)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s6trs"]
 size = Vector2(10, 7)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_b717x"]
-radius = 13.0
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_b717x"]
+height = 36.0
 
 [node name="Tauracre" type="Node2D" unique_id=444771128]
 y_sort_enabled = true
@@ -13121,11 +13122,19 @@ position = Vector2(0, 3.5)
 shape = SubResource("RectangleShape2D_s6trs")
 
 [node name="InteractArea" type="Area2D" parent="NPCs/ShopKeeperJacob" unique_id=1795295287]
+position = Vector2(0, 4)
 collision_layer = 4
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="NPCs/ShopKeeperJacob/InteractArea" unique_id=1080831254]
-shape = SubResource("CircleShape2D_b717x")
+shape = SubResource("CapsuleShape2D_b717x")
+
+[node name="WorldItems" type="Node2D" parent="." unique_id=1715263333]
+y_sort_enabled = true
+
+[node name="OldKeyPickup" parent="WorldItems" unique_id=989006823 instance=ExtResource("15_worlditem")]
+position = Vector2(312, 232)
+spawn_id = &"tauracre_old_key_pickup"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=720990039]
 
@@ -13135,9 +13144,9 @@ offset_top = 584.0
 offset_right = 786.0
 offset_bottom = 618.0
 theme_override_font_sizes/font_size = 22
-text = "Press Enter to Talk"
+text = "Press Interact to Talk"
 horizontal_alignment = 1
 script = ExtResource("4_fm3vq")
-default_text = "Press Enter to Talk"
+default_text = "Press Interact to Talk"
 
 [editable path="VillageExit"]

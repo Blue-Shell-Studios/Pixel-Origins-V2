@@ -19,6 +19,7 @@ func interact() -> void:
 	if not _can_player_interact():
 		return
 
+	_record_npc_talk_event()
 	var lines := PackedStringArray([
 		"Welcome to my stall.",
 		"If you have 20 coins, I can set you up with a bow.",
