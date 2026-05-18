@@ -573,20 +573,22 @@ animation = &"bow_attack_side"
 autoplay = "idle_down"
 frame = 5
 frame_progress = 1.0
+offset = Vector2(0, -8)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1526763109]
-position = Vector2(0, 4)
+position = Vector2(0, -2)
 shape = SubResource("RectangleShape2D_fkugw")
 
 [node name="HitBox" type="Area2D" parent="." unique_id=1675916175]
+position = Vector2(0, -5)
 collision_layer = 128
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox" unique_id=1907962728]
-position = Vector2(0, 0.5)
 shape = SubResource("RectangleShape2D_bls4j")
 
 [node name="SwordSlashArea" type="Area2D" parent="." unique_id=401128148]
+position = Vector2(0, -5)
 collision_layer = 64
 collision_mask = 4
 
