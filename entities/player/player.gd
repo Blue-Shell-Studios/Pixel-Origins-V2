@@ -26,6 +26,7 @@ var owned_weapons := {
 @onready var coins_label: Label = $HUD/HUDRoot/CoinsLabel
 @onready var active_quest_label: Label = $HUD/HUDRoot/ActiveQuestLabel
 @onready var hud_status_label: Label = $HUD/HUDRoot/StatusLabel
+@onready var inventory_label: Label = $HUD/HUDRoot/InventoryLabel
 @onready var slot_1_panel: Panel = $HUD/ActionBar/Slot1
 @onready var slot_2_panel: Panel = $HUD/ActionBar/Slot2
 @onready var slot_3_panel: Panel = $HUD/ActionBar/Slot3
@@ -33,6 +34,7 @@ var owned_weapons := {
 var bow_aim_direction: Vector2 = Vector2.RIGHT
 var health: int = 0
 var coins: int = 0
+var inventory_items: Dictionary = {}
 var knockback_velocity: Vector2 = Vector2.ZERO
 var is_attacking: bool = false
 var is_hurt: bool = false
@@ -342,6 +344,7 @@ func _refresh_hud() -> void:
 	health_bar.tooltip_text = "HP %d/%d" % [health, max_health]
 	health_label.text = "HP %d/%d" % [health, max_health]
 	coins_label.text = "Coins: %d" % coins
+	inventory_label.text = _build_inventory_text()
 	var quest_summary := QuestManager.get_active_quest_summary()
 	if quest_summary.is_empty():
 		active_quest_label.text = "Active Quest: None"
@@ -377,6 +380,41 @@ func add_coins(amount: int) -> void:
 	coins += max(0, amount)
 	hud_status_label.text = "Picked up %d coin%s." % [amount, "" if amount == 1 else "s"]
 	_refresh_hud()
+
+
+func add_inventory_item(item_id: StringName, item_name: String, amount: int = 1) -> bool:
+	var safe_amount: int = max(1, amount)
+	var id_key := String(item_id).strip_edges()
+	if id_key.is_empty():
+		id_key = item_name.to_snake_case()
+	if id_key.is_empty():
+		id_key = "item"
+
+	var display_name := item_name.strip_edges()
+	if display_name.is_empty():
+		display_name = id_key.capitalize()
+
+	var existing := inventory_items.get(id_key, {"name": display_name, "count": 0}) as Dictionary
+	existing["name"] = display_name
+	existing["count"] = int(existing.get("count", 0)) + safe_amount
+	inventory_items[id_key] = existing
+	hud_status_label.text = "Obtained %s x%d." % [display_name, safe_amount]
+	_refresh_hud()
+	return true
+
+
+func _build_inventory_text() -> String:
+	if inventory_items.is_empty():
+		return "Inventory: (empty)"
+
+	var entries: PackedStringArray = []
+	for key in inventory_items.keys():
+		var entry := inventory_items.get(key, {}) as Dictionary
+		var entry_name := String(entry.get("name", key))
+		var count: int = max(0, int(entry.get("count", 0)))
+		entries.append("%s x%d" % [entry_name, count])
+	entries.sort()
+	return "Inventory: %s" % ", ".join(entries)
 
 
 func try_spend_coins(amount: int) -> bool:
@@ -417,6 +455,7 @@ func get_session_state() -> Dictionary:
 	return {
 		"health": health,
 		"coins": coins,
+		"inventory_items": inventory_items.duplicate(true),
 		"selected_slot": selected_slot,
 		"equipped_weapon": String(equipped_weapon),
 		"owned_weapons": owned_weapons.duplicate(true),
@@ -428,6 +467,8 @@ func apply_session_state(state: Dictionary) -> void:
 		health = clampi(int(state["health"]), 0, max_health)
 	if state.has("coins"):
 		coins = max(0, int(state["coins"]))
+	if state.has("inventory_items"):
+		inventory_items = (state["inventory_items"] as Dictionary).duplicate(true)
 	if state.has("owned_weapons"):
 		owned_weapons = (state["owned_weapons"] as Dictionary).duplicate(true)
 

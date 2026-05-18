@@ -34,6 +34,7 @@ func apply_player_state(player: Node) -> void:
 func clear_session_state() -> void:
 	_has_session_state = false
 	_player_state = {}
+	EventsManager.clear_all()
 
 
 func _capture_player_state_fallback(player: Node) -> Dictionary:
@@ -42,6 +43,8 @@ func _capture_player_state_fallback(player: Node) -> Dictionary:
 		state["health"] = player.health
 	if "coins" in player:
 		state["coins"] = player.coins
+	if "inventory_items" in player:
+		state["inventory_items"] = player.inventory_items.duplicate(true)
 	if "selected_slot" in player:
 		state["selected_slot"] = player.selected_slot
 	if "equipped_weapon" in player:
@@ -56,6 +59,8 @@ func _apply_player_state_fallback(player: Node, state: Dictionary) -> void:
 		player.health = int(state["health"])
 	if state.has("coins") and "coins" in player:
 		player.coins = int(state["coins"])
+	if state.has("inventory_items") and "inventory_items" in player:
+		player.inventory_items = (state["inventory_items"] as Dictionary).duplicate(true)
 	if state.has("owned_weapons") and "owned_weapons" in player:
 		player.owned_weapons = (state["owned_weapons"] as Dictionary).duplicate(true)
 	if state.has("selected_slot") and player.has_method("_select_slot"):

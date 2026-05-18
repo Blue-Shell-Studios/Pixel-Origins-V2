@@ -599,7 +599,7 @@ shape = SubResource("CircleShape2D_sword_slash")
 offset_left = 12.0
 offset_top = 12.0
 offset_right = 360.0
-offset_bottom = 152.0
+offset_bottom = 178.0
 
 [node name="HealthBar" type="ProgressBar" parent="HUD/HUDRoot" unique_id=1344649653]
 layout_mode = 0
@@ -630,21 +630,30 @@ offset_bottom = 58.0
 theme_override_font_sizes/font_size = 15
 text = "Coins: 0"
 
+[node name="InventoryLabel" type="Label" parent="HUD/HUDRoot" unique_id=1988711001]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 58.0
+offset_right = 340.0
+offset_bottom = 80.0
+theme_override_font_sizes/font_size = 14
+text = "Inventory: (empty)"
+
 [node name="ActiveQuestLabel" type="Label" parent="HUD/HUDRoot" unique_id=1702404509]
 layout_mode = 0
 offset_left = 10.0
-offset_top = 72.0
+offset_top = 90.0
 offset_right = 340.0
-offset_bottom = 106.0
+offset_bottom = 122.0
 theme_override_font_sizes/font_size = 14
 text = "Active Quest: None"
 
 [node name="StatusLabel" type="Label" parent="HUD/HUDRoot" unique_id=1534561112]
 layout_mode = 0
 offset_left = 10.0
-offset_top = 114.0
+offset_top = 134.0
 offset_right = 340.0
-offset_bottom = 140.0
+offset_bottom = 162.0
 theme_override_font_sizes/font_size = 14
 text = "Ready."
 
