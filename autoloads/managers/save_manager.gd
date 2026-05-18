@@ -1,48 +1,64 @@
 extends Node
 
-const SAVE_PATH := "user://savegame.json"
-const SAVE_VERSION := 1
+var _has_session_state := false
+var _player_state: Dictionary = {}
 
-func has_save() -> bool:
-	return FileAccess.file_exists(SAVE_PATH)
 
-func clear_save() -> void:
-	if has_save():
-		DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_PATH))
+func has_player_state() -> bool:
+	return _has_session_state
 
-func save_progress(stage_name: String, position: Vector2, health: int, gold: int) -> bool:
-	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
-	if file == null:
-		push_warning("SaveManager failed to open save file for writing.")
-		return false
 
-	var payload := {
-		"version": SAVE_VERSION,
-		"stage": stage_name,
-		"position": {
-			"x": position.x,
-			"y": position.y
-		},
-		"health": health,
-		"gold": gold
-	}
+func capture_player_state(player: Node) -> void:
+	if player == null:
+		return
 
-	file.store_string(JSON.stringify(payload))
-	return true
+	if player.has_method("get_session_state"):
+		_player_state = player.get_session_state()
+	else:
+		_player_state = _capture_player_state_fallback(player)
+	_has_session_state = true
 
-func load_progress() -> Dictionary:
-	if not has_save():
-		return {}
 
-	var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
-	if file == null:
-		push_warning("SaveManager failed to open save file for reading.")
-		return {}
+func apply_player_state(player: Node) -> void:
+	if not _has_session_state:
+		return
+	if player == null:
+		return
 
-	var raw := file.get_as_text()
-	var parsed = JSON.parse_string(raw)
-	if not (parsed is Dictionary):
-		push_warning("SaveManager found invalid JSON save data.")
-		return {}
+	if player.has_method("apply_session_state"):
+		player.apply_session_state(_player_state)
+	else:
+		_apply_player_state_fallback(player, _player_state)
 
-	return parsed
+
+func clear_session_state() -> void:
+	_has_session_state = false
+	_player_state = {}
+
+
+func _capture_player_state_fallback(player: Node) -> Dictionary:
+	var state := {}
+	if "health" in player:
+		state["health"] = player.health
+	if "coins" in player:
+		state["coins"] = player.coins
+	if "selected_slot" in player:
+		state["selected_slot"] = player.selected_slot
+	if "equipped_weapon" in player:
+		state["equipped_weapon"] = String(player.equipped_weapon)
+	if "owned_weapons" in player:
+		state["owned_weapons"] = player.owned_weapons.duplicate(true)
+	return state
+
+
+func _apply_player_state_fallback(player: Node, state: Dictionary) -> void:
+	if state.has("health") and "health" in player:
+		player.health = int(state["health"])
+	if state.has("coins") and "coins" in player:
+		player.coins = int(state["coins"])
+	if state.has("owned_weapons") and "owned_weapons" in player:
+		player.owned_weapons = (state["owned_weapons"] as Dictionary).duplicate(true)
+	if state.has("selected_slot") and player.has_method("_select_slot"):
+		player._select_slot(int(state["selected_slot"]))
+	elif player.has_method("_refresh_hud"):
+		player._refresh_hud()

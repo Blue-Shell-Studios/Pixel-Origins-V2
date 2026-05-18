@@ -1,169 +1,138 @@
 extends Node
 
-const PLAYER = preload("uid://dfex4074y0qp5")
-
-const stages: Dictionary[Util.StageName, Resource] = {
-	Util.StageName.TAURACRE: preload("uid://blqef7t1rrrvp"),
-	Util.StageName.OVERWORLD: preload("uid://dpworspig040p"),
-	Util.StageName.BRAMBLEWILDS: preload("uid://xf1140ihx0yy"),
-	Util.StageName.START_SCREEN: preload("uid://grwu3pkt0qb5")
+const STAGES := {
+	"start_screen": "res://stages/startscreen/start_screen.tscn",
+	"overworld": "res://stages/overworld/overworld.tscn",
+	"bramble_wilds": "res://stages/bramblewilds/bramble_wilds.tscn",
+	"tauracre": "res://stages/tauracre/tauracre.tscn",
 }
 
-@onready var current_scene := get_tree().current_scene
+var current_stage_id: StringName = &""
+var previous_stage_id: StringName = &""
+var pending_spawn_id: StringName = &""
 
-var player: Player
-var current_stage: Stage
-var current_stage_name := Util.StageName.NONE
 
 func _ready() -> void:
-	current_stage = stages[Util.StageName.START_SCREEN].instantiate()
-	current_stage_name = Util.StageName.START_SCREEN
-	current_scene.add_child(current_stage)
+	get_tree().scene_changed.connect(_on_scene_changed)
+	# Boot into an explicit first stage so startup flow is centralized here.
+	call_deferred("go_to_stage", &"start_screen")
 
-func switch_stage(stage_name: Util.StageName, ...args) -> void:
-	if current_stage: current_stage.queue_free()
-	
-	current_stage = stages[stage_name].instantiate()
-	current_stage_name = stage_name
 
-	if current_stage == null:
-		push_warning("StageManager could not instantiate stage as Stage.")
-		return
+func has_stage(stage_id: StringName) -> bool:
+	return STAGES.has(String(stage_id))
 
-	get_tree().current_scene.add_child(current_stage)
 
-	var spawn_name := ""
-	if args.size() > 0 and args[0] is String:
-		spawn_name = args[0]
+func get_stage_path(stage_id: StringName) -> String:
+	return STAGES.get(String(stage_id), "")
 
-	var exact_position: Variant = null
-	if args.size() > 1 and args[1] is Vector2:
-		exact_position = args[1]
 
-	var loaded_health: Variant = null
-	if args.size() > 2 and (args[2] is int or args[2] is float):
-		loaded_health = args[2]
-
-	var loaded_gold: Variant = null
-	if args.size() > 3 and (args[3] is int or args[3] is float):
-		loaded_gold = args[3]
-
-	match current_stage.type:
-		Stage.Type.MAP:
-			require_player(true)
-			_apply_loaded_player_state(loaded_health, loaded_gold)
-			var saved_position := _place_player(spawn_name, exact_position)
-			_save_progress(stage_name, saved_position)
-		Stage.Type.LOCATION:
-			require_player(true)
-			_apply_loaded_player_state(loaded_health, loaded_gold)
-			var saved_position := _place_player(spawn_name, exact_position)
-			_save_progress(stage_name, saved_position)
-		Stage.Type.UI:
-			require_player(false)
-
-func load_last_save() -> bool:
-	var progress := SaveManager.load_progress()
-	if progress.is_empty():
+func go_to_stage(stage_id: StringName) -> bool:
+	if not has_stage(stage_id):
+		push_error("StageManager: Unknown stage id '%s'." % String(stage_id))
 		return false
 
-	var stage_name := str(progress.get("stage", ""))
-	var stage := stage_name_from_string(stage_name)
-	if stage == Util.StageName.NONE or stage == Util.StageName.START_SCREEN:
+	var stage_path := get_stage_path(stage_id)
+	if stage_path.is_empty():
+		push_error("StageManager: Empty scene path for stage id '%s'." % String(stage_id))
 		return false
 
-	var position_data = progress.get("position", {})
-	if not (position_data is Dictionary):
+	_capture_active_player_state()
+
+	var err := get_tree().change_scene_to_file(stage_path)
+	if err != OK:
+		push_error("StageManager: Failed to load '%s' (error: %d)." % [stage_path, err])
 		return false
 
-	var x := float(position_data.get("x", 0.0))
-	var y := float(position_data.get("y", 0.0))
-
-	var health: Variant = null
-	if progress.has("health"):
-		health = int(progress.get("health", 0))
-
-	var gold: Variant = null
-	if progress.has("gold"):
-		gold = int(progress.get("gold", 0))
-
-	switch_stage(stage, "", Vector2(x, y), health, gold)
+	previous_stage_id = current_stage_id
+	current_stage_id = stage_id
 	return true
 
-func require_player(is_player_needed: bool) -> void:
-	if is_player_needed:
-		if not is_instance_valid(player):
-			player = PLAYER.instantiate()
-		if player.get_parent() == null:
-			current_scene.add_child(player)
-	else:
-		if is_instance_valid(player):
-			player.queue_free()
-			player = null
 
-func _place_player(spawn_name: String, exact_position: Variant = null) -> Vector2:
-	if not is_instance_valid(player):
-		return Vector2.ZERO
+func go_to_stage_with_spawn(stage_id: StringName, spawn_id: StringName) -> bool:
+	pending_spawn_id = spawn_id
+	var changed := go_to_stage(stage_id)
+	if not changed:
+		pending_spawn_id = &""
+	return changed
 
-	var target_position := player.global_position
 
-	if spawn_name != "":
-		var spawn := current_stage.get_node_or_null("Spawns/" + spawn_name)
-		if spawn is Node2D:
-			target_position = spawn.global_position
-			player.call_deferred("set_global_position", spawn.global_position)
+func reload_current_stage() -> bool:
+	if String(current_stage_id).is_empty():
+		push_warning("StageManager: No current stage to reload.")
+		return false
 
-	if exact_position is Vector2:
-		target_position = exact_position
-		player.call_deferred("set_global_position", exact_position)
+	return go_to_stage(current_stage_id)
 
-	return target_position
 
-func _save_progress(stage_name: Util.StageName, position: Vector2) -> void:
-	if stage_name == Util.StageName.NONE or stage_name == Util.StageName.START_SCREEN:
+func go_to_previous_stage() -> bool:
+	if String(previous_stage_id).is_empty():
+		push_warning("StageManager: No previous stage to return to.")
+		return false
+
+	return go_to_stage(previous_stage_id)
+
+
+func consume_pending_spawn() -> StringName:
+	var spawn_id := pending_spawn_id
+	pending_spawn_id = &""
+	return spawn_id
+
+
+func _on_scene_changed() -> void:
+	var scene_root := get_tree().current_scene
+	if scene_root == null:
 		return
 
-	var stage_name_string := stage_name_to_string(stage_name)
-	if stage_name_string == "":
+	if pending_spawn_id.is_empty():
+		_apply_saved_player_state(scene_root)
 		return
 
-	if not is_instance_valid(player):
+	_apply_pending_spawn(scene_root)
+	_apply_saved_player_state(scene_root)
+
+
+func _apply_pending_spawn(scene_root: Node) -> void:
+	var spawn_node := scene_root.get_node_or_null("SpawnPoints/%s" % String(pending_spawn_id)) as Node2D
+	if spawn_node == null:
+		push_warning("StageManager: Spawn point '%s' not found in stage '%s'." % [String(pending_spawn_id), String(current_stage_id)])
+		pending_spawn_id = &""
 		return
 
-	SaveManager.save_progress(stage_name_string, position, player.health, QuestManager.get_total_gold())
-
-func _apply_loaded_player_state(loaded_health: Variant, loaded_gold: Variant) -> void:
-	if loaded_gold is int or loaded_gold is float:
-		QuestManager.set_total_gold(int(loaded_gold))
-
-	if not is_instance_valid(player):
+	var player := _find_player(scene_root)
+	if player == null:
+		push_warning("StageManager: Player not found in stage '%s' while applying spawn '%s'." % [String(current_stage_id), String(pending_spawn_id)])
+		pending_spawn_id = &""
 		return
 
-	if loaded_health is int or loaded_health is float:
-		player.health = int(clamp(int(loaded_health), 0, player.max_health))
+	player.global_position = spawn_node.global_position
+	pending_spawn_id = &""
 
-func stage_name_to_string(stage_name: Util.StageName) -> String:
-	match stage_name:
-		Util.StageName.TAURACRE:
-			return "TAURACRE"
-		Util.StageName.OVERWORLD:
-			return "OVERWORLD"
-		Util.StageName.BRAMBLEWILDS:
-			return "BRAMBLEWILDS"
-		Util.StageName.START_SCREEN:
-			return "START_SCREEN"
-		_:
-			return ""
 
-func stage_name_from_string(value: String) -> Util.StageName:
-	match value:
-		"TAURACRE":
-			return Util.StageName.TAURACRE
-		"OVERWORLD":
-			return Util.StageName.OVERWORLD
-		"BRAMBLEWILDS":
-			return Util.StageName.BRAMBLEWILDS
-		"START_SCREEN":
-			return Util.StageName.START_SCREEN
-		_:
-			return Util.StageName.NONE
+func _find_player(scene_root: Node) -> Node2D:
+	for node in get_tree().get_nodes_in_group("player"):
+		if node is Node2D and scene_root.is_ancestor_of(node):
+			return node as Node2D
+
+	var named_player := scene_root.get_node_or_null("Player")
+	if named_player is Node2D:
+		return named_player as Node2D
+	return null
+
+
+func _capture_active_player_state() -> void:
+	var scene_root := get_tree().current_scene
+	if scene_root == null:
+		return
+	var player := _find_player(scene_root)
+	if player == null:
+		return
+	SaveManager.capture_player_state(player)
+
+
+func _apply_saved_player_state(scene_root: Node) -> void:
+	if not SaveManager.has_player_state():
+		return
+	var player := _find_player(scene_root)
+	if player == null:
+		return
+	SaveManager.apply_player_state(player)
