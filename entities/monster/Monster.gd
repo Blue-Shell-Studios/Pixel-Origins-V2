@@ -1,1 +1,0 @@
-class_name Monster extends CharacterBody2D

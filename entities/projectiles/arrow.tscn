@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://dvsl4diudjxke"]
+
+[ext_resource type="Script" uid="uid://bfj8p52e73d8j" path="res://entities/projectiles/arrow.gd" id="1_cq6ti"]
+[ext_resource type="Texture2D" uid="uid://cybqwotnpw05x" path="res://assets/Dan Character/Effect_Arrow.png" id="2_sadbq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_arrow"]
+size = Vector2(10, 5)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cmigs"]
+atlas = ExtResource("2_sadbq")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gdlky"]
+atlas = ExtResource("2_sadbq")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kniwg"]
+atlas = ExtResource("2_sadbq")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4pdk0"]
+atlas = ExtResource("2_sadbq")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_d3m1a"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cmigs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gdlky")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kniwg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4pdk0")
+}],
+"loop": true,
+"name": &"default",
+"speed": 12.0
+}]
+
+[node name="Arrow" type="Area2D" unique_id=231618414]
+collision_layer = 64
+collision_mask = 4
+script = ExtResource("1_cq6ti")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=126154299]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_arrow")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=50459681]
+sprite_frames = SubResource("SpriteFrames_d3m1a")
+autoplay = "default"
+frame_progress = 0.26033524

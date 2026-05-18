@@ -1,142 +1,147 @@
 extends Node
 
-const QUEST_MAYOR_GOBLIN := "mayor_goblin_hunt"
+signal npc_quest_state_changed(npc_id: StringName)
+signal quest_progressed(quest_id: StringName, progress: int, required: int)
 
-const QUEST_DEFINITIONS := {
-	QUEST_MAYOR_GOBLIN: {
-		"title": "Goblin Cleanup",
-		"description": "Defeat 1 goblin for the Village Mayor.",
-		"target": 1,
-		"gold_reward": 10,
-		"enemy_type": "goblin",
-		"repeatable": true
-	}
+const QUEST_LYRA_GOBLIN_HUNT: StringName = &"lyra_goblin_hunt"
+const NPC_SCOUT_LYRA: StringName = &"scout_lyra"
+
+const STATE_AVAILABLE: StringName = &"available"
+const STATE_IN_PROGRESS: StringName = &"in_progress"
+const STATE_READY_TO_TURN_IN: StringName = &"ready_to_turn_in"
+const STATE_TURNED_IN: StringName = &"turned_in"
+const STATE_NONE: StringName = &"none"
+
+var _quest_states := {
+	QUEST_LYRA_GOBLIN_HUNT: STATE_AVAILABLE,
 }
 
-var active_quests: Dictionary = {}
-var tracked_quest_id := ""
-var total_gold := 0
+var _quest_progress := {
+	QUEST_LYRA_GOBLIN_HUNT: 0,
+}
 
-func _ready() -> void:
-	SignalBus.enemy_killed.connect(_on_enemy_killed)
-	SignalBus.player_gold_changed.emit(total_gold)
-	_emit_changed()
+var _quest_required := {
+	QUEST_LYRA_GOBLIN_HUNT: 5,
+}
 
-func has_active_quest(quest_id: String) -> bool:
-	return active_quests.has(quest_id)
+var _quest_reward_coins := {
+	QUEST_LYRA_GOBLIN_HUNT: 10,
+}
 
-func grant_quest(quest_id: String) -> bool:
-	if not QUEST_DEFINITIONS.has(quest_id):
-		return false
+var _quest_target_enemy := {
+	QUEST_LYRA_GOBLIN_HUNT: &"goblin",
+}
 
-	if active_quests.has(quest_id):
-		return false
+var _npc_quest := {
+	NPC_SCOUT_LYRA: QUEST_LYRA_GOBLIN_HUNT,
+}
 
-	var definition: Dictionary = QUEST_DEFINITIONS[quest_id]
-	active_quests[quest_id] = {
-		"id": quest_id,
-		"title": definition["title"],
-		"description": definition["description"],
-		"target": int(definition["target"]),
-		"progress": 0,
-		"ready_to_turn_in": false,
-		"gold_reward": int(definition.get("gold_reward", 0)),
-		"enemy_type": definition["enemy_type"],
-		"repeatable": bool(definition["repeatable"])
+var _active_npc_quest: StringName = &""
+
+
+func get_npc_quest_state(npc_id: StringName) -> StringName:
+	var quest_id := _npc_quest.get(npc_id, &"") as StringName
+	if quest_id.is_empty():
+		return STATE_NONE
+	return _quest_states.get(quest_id, STATE_NONE)
+
+
+func get_npc_quest_progress(npc_id: StringName) -> Dictionary:
+	var quest_id := _npc_quest.get(npc_id, &"") as StringName
+	if quest_id.is_empty():
+		return {"current": 0, "required": 0}
+	return {
+		"current": int(_quest_progress.get(quest_id, 0)),
+		"required": int(_quest_required.get(quest_id, 0)),
 	}
 
-	if tracked_quest_id.is_empty():
-		tracked_quest_id = quest_id
 
-	_emit_changed()
-	return true
+func interact_with_npc_quest(npc_id: StringName, player: Node) -> PackedStringArray:
+	var quest_id := _npc_quest.get(npc_id, &"") as StringName
+	if quest_id.is_empty():
+		return PackedStringArray()
 
-func grant_mayor_goblin_quest() -> bool:
-	return grant_quest(QUEST_MAYOR_GOBLIN)
+	var state := _quest_states.get(quest_id, STATE_NONE) as StringName
+	match state:
+		STATE_AVAILABLE:
+			if not _active_npc_quest.is_empty() and _active_npc_quest != quest_id:
+				return PackedStringArray([
+					"I cannot focus on a new request until your current one is done.",
+				])
+			_active_npc_quest = quest_id
+			_quest_states[quest_id] = STATE_IN_PROGRESS
+			npc_quest_state_changed.emit(npc_id)
+			return PackedStringArray([
+				"Bramble Wilds has been crawling with goblins lately.",
+				"Can you help me thin them out?",
+				"Please defeat 5 goblins. I can pay you 10 coins.",
+			])
+		STATE_IN_PROGRESS:
+			var progress := get_npc_quest_progress(npc_id)
+			return PackedStringArray([
+				"Keep at it. Goblins defeated: %d/%d." % [int(progress.current), int(progress.required)],
+			])
+		STATE_READY_TO_TURN_IN:
+			var reward := int(_quest_reward_coins.get(quest_id, 0))
+			if player != null and player.has_method("add_coins"):
+				player.add_coins(reward)
+			_quest_states[quest_id] = STATE_TURNED_IN
+			if _active_npc_quest == quest_id:
+				_active_npc_quest = &""
+			npc_quest_state_changed.emit(npc_id)
+			return PackedStringArray([
+				"You did it. The path already feels safer.",
+				"Here, take %d coins as promised." % reward,
+			])
+		STATE_TURNED_IN:
+			return PackedStringArray([
+				"Thanks again. Tauracre owes you.",
+			])
 
-func toggle_tracked_quest(quest_id: String) -> void:
-	if not active_quests.has(quest_id):
-		return
+	return PackedStringArray()
 
-	if tracked_quest_id == quest_id:
-		tracked_quest_id = ""
-	else:
-		tracked_quest_id = quest_id
 
-	_emit_changed()
-
-func get_active_quests() -> Array:
-	var quests: Array = active_quests.values().duplicate(true)
-	quests.sort_custom(func(a: Dictionary, b: Dictionary): return String(a.get("title", "")) < String(b.get("title", "")))
-	return quests
-
-func get_tracked_quest() -> Dictionary:
-	if tracked_quest_id.is_empty():
-		return {}
-	if not active_quests.has(tracked_quest_id):
-		return {}
-	return active_quests[tracked_quest_id]
-
-func get_total_gold() -> int:
-	return total_gold
-
-func set_total_gold(value: int) -> void:
-	total_gold = max(0, value)
-	SignalBus.player_gold_changed.emit(total_gold)
-
-func is_quest_ready_to_turn_in(quest_id: String) -> bool:
-	if not active_quests.has(quest_id):
-		return false
-	return bool(active_quests[quest_id].get("ready_to_turn_in", false))
-
-func complete_quest_turn_in(quest_id: String) -> bool:
-	if not is_quest_ready_to_turn_in(quest_id):
-		return false
-
-	_complete_quest(quest_id)
-	_emit_changed()
-	return true
-
-func _on_enemy_killed(enemy_type: String) -> void:
-	for quest_id in active_quests.keys():
-		var quest: Dictionary = active_quests[quest_id]
-		if String(quest.get("enemy_type", "")) != enemy_type:
+func record_enemy_kill(enemy_type: StringName) -> void:
+	for quest_id in _quest_states.keys():
+		if _quest_states[quest_id] != STATE_IN_PROGRESS:
+			continue
+		var target_enemy := _quest_target_enemy.get(quest_id, &"") as StringName
+		if target_enemy != enemy_type:
 			continue
 
-		var target := int(quest.get("target", 0))
-		var progress := int(quest.get("progress", 0))
-		progress = min(progress + 1, target)
-		quest["progress"] = progress
-		if progress >= target and not bool(quest.get("ready_to_turn_in", false)):
-			quest["ready_to_turn_in"] = true
-			SignalBus.print_text.emit("Objective complete. Return to the mayor.", Util.TextPos.BOTTOM)
+		var current := int(_quest_progress.get(quest_id, 0)) + 1
+		var required := int(_quest_required.get(quest_id, 0))
+		_quest_progress[quest_id] = min(current, required)
+		quest_progressed.emit(quest_id, _quest_progress[quest_id], required)
 
-		active_quests[quest_id] = quest
+		if _quest_progress[quest_id] >= required:
+			_quest_states[quest_id] = STATE_READY_TO_TURN_IN
+			var owner := _find_owner_npc(quest_id)
+			if not owner.is_empty():
+				npc_quest_state_changed.emit(owner)
 
-	_emit_changed()
 
-func _complete_quest(quest_id: String) -> void:
-	if not active_quests.has(quest_id):
-		return
+func get_active_quest_summary() -> String:
+	if _active_npc_quest.is_empty():
+		return ""
 
-	var quest: Dictionary = active_quests[quest_id]
-	var quest_title := String(quest.get("title", "Quest"))
-	var gold_reward := int(quest.get("gold_reward", 0))
-	active_quests.erase(quest_id)
+	if _active_npc_quest == QUEST_LYRA_GOBLIN_HUNT:
+		var state := _quest_states.get(_active_npc_quest, STATE_NONE) as StringName
+		var current := int(_quest_progress.get(_active_npc_quest, 0))
+		var required := int(_quest_required.get(_active_npc_quest, 0))
+		match state:
+			STATE_IN_PROGRESS:
+				return "Scout Lyra: Defeat goblins %d/%d" % [current, required]
+			STATE_READY_TO_TURN_IN:
+				return "Scout Lyra: Return for reward"
+			_:
+				return ""
 
-	if tracked_quest_id == quest_id:
-		tracked_quest_id = ""
+	return ""
 
-	_grant_gold(gold_reward)
-	SignalBus.print_text.emit("Quest Complete: %s" % quest_title, Util.TextPos.BOTTOM)
 
-func _emit_changed() -> void:
-	SignalBus.quests_changed.emit(get_active_quests(), tracked_quest_id)
-
-func _grant_gold(amount: int) -> void:
-	if amount <= 0:
-		return
-
-	total_gold += amount
-	SignalBus.player_gold_changed.emit(total_gold)
-	SignalBus.print_text.emit("+%d Gold" % amount, Util.TextPos.BOTTOM)
+func _find_owner_npc(quest_id: StringName) -> StringName:
+	for npc_id in _npc_quest.keys():
+		if _npc_quest[npc_id] == quest_id:
+			return npc_id
+	return &""

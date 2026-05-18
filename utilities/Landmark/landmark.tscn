@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://bhk021jyhbyrd"]
-
-[ext_resource type="Script" uid="uid://dxmvwle4b3yxa" path="res://utilities/Landmark/Landmark.gd" id="1_fv7y4"]
-
-[node name="Landmark" type="Area2D" unique_id=1792079593]
-script = ExtResource("1_fv7y4")
