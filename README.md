@@ -67,3 +67,20 @@ A 2D top-down action RPG prototype built in Godot 4.6.
 
 1. Open the project folder in Godot 4.6.
 2. Run the project (`F5`) from the editor.
+
+## Assets Information
+
+The table below lists the assets used for **Pixel Origins**, sourced primarily from **itch.io**. These assets were selected based on their **consistent art style** (pixel dimensions and color schemes) and their **animations** for combat and movement. All assets are **free for non-commercial use**, though some creators appreciate or require credit.
+
+| Asset Link | Description | Credits / License |
+| :--- | :--- | :--- |
+| [Little Dreamyland Asset Pack](https://starmixu.itch.io/little-dreamyland-asset-pack) | An asset pack used for landscape, building and objects throughout the map | By Starmixu and Utaskuas |
+| [Dan's RPG Set](https://danieruart.itch.io/16x16-rpg-fantasy-character-and-tileset) | Contains the player character with partially complete animations | By DanieruArt |
+| [Sunny side asset pack](https://danieldiggle.itch.io/sunnyside) | An asset pack used for the landscape / tileset and 1 enemy | By daniellediggle |
+| [Pixel Poem Dungeon](https://pixel-poem.itch.io/dungeon-assetpuck) | Asset pack for dungeons and enemies | By Pixel_Poem, support MiniPainter |
+| [Monopixel Monsters](https://monopixelart.itch.io/) | Monster Assetpack | By MonoPixel |
+| [Broken Sword Asset Pack](https://from-chris.itch.io/broken-sword-asset-pack) | Forest themed tileset and knight animated sprites | By Chris |
+| [Pixel Crawler](https://anokolisa.itch.io/free-pixel-art-asset-pack-topdown-tileset-rpg-16x16-sprites) | NPC and Decorator with basic tileset | By Anokolisa |
+| [Super Retro World Character pack](https://gif-superretroworld.itch.io/character-pack) | Basic NPC sprites | By Gif |
+| [RPG Dungeon Pack](https://gif-superretroworld.itch.io/dungeon-pack) | Dungeon / Arena tileset | By Gif (@gif_not_jif), Noiracide (@Noiracide), and Romi (@DessRomaric) |
+| [RPG Interior Pack](https://gif-superretroworld.itch.io/interior-pack) | House interior and walls | By The low-res arist (Twitter @Pixelart_asset) |
