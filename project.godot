@@ -26,6 +26,12 @@ DialogueService="*uid://q0x162jxhfch"
 ProjectileManager="*res://autoloads/managers/projectile_manager.gd"
 EventsManager="*res://autoloads/managers/events_manager.gd"
 PauseMenuManager="*res://autoloads/managers/pause_menu_manager.gd"
+SoundManager="*res://autoloads/managers/sound_manager.gd"
+DeathManager="*res://autoloads/managers/death_manager.gd"
+
+[display]
+
+window/stretch/mode="viewport"
 
 [editor_plugins]
 

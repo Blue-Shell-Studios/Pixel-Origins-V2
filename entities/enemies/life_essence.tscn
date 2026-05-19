@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://entities/enemies/life_essence.gd" id="1_life"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_core"]
+radius = 9.0
+
+[node name="LifeEssence" type="Area2D"]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_life")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_core")
+
+[node name="Glow" type="Polygon2D" parent="."]
+color = Color(0.615686, 0.333333, 0.827451, 0.45)
+polygon = PackedVector2Array(0, -17, 12, -10, 17, 0, 12, 10, 0, 17, -12, 10, -17, 0, -12, -10)
+
+[node name="Core" type="Polygon2D" parent="."]
+color = Color(0.901961, 0.733333, 0.956863, 1)
+polygon = PackedVector2Array(0, -9, 8, 0, 0, 9, -8, 0)
+
+[node name="Spark" type="Polygon2D" parent="."]
+color = Color(1, 0.952941, 0.717647, 1)
+polygon = PackedVector2Array(0, -4, 3, 0, 0, 4, -3, 0)

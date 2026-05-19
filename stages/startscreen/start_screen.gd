@@ -1,48 +1,39 @@
 extends Node2D
 
-@onready var title_card: Panel = $CanvasLayer/TitleCard
-@onready var prompt_label: Label = $CanvasLayer/TitleCard/Prompt
-@onready var main_menu: Panel = $CanvasLayer/MainMenu
-@onready var play_button: Button = $CanvasLayer/MainMenu/VBoxContainer/PlayButton
-@onready var exit_button: Button = $CanvasLayer/MainMenu/VBoxContainer/ExitButton
-
-var menu_unlocked := false
+@onready var canvas_layer: CanvasLayer = $CanvasLayer
+@onready var background: TextureRect = $CanvasLayer/TextureRect
+@onready var title_card: Control = $CanvasLayer/TitleCard
+@onready var menu_container: Control = $CanvasLayer/VBoxContainer
+@onready var play_button: Button = $CanvasLayer/VBoxContainer/PlayButton
+@onready var exit_button: Button = $CanvasLayer/VBoxContainer/ExitButton
 
 
 func _ready() -> void:
-	main_menu.visible = false
-	title_card.modulate.a = 0.0
-	prompt_label.modulate.a = 0.0
-
 	play_button.pressed.connect(_on_play_pressed)
 	exit_button.pressed.connect(_on_exit_pressed)
 
+	# No click-to-unlock transition. Show title + menu immediately, with a startup fade-in.
+	title_card.visible = true
+	menu_container.visible = true
+	background.modulate.a = 0.0
+	title_card.modulate.a = 0.0
+	menu_container.modulate.a = 0.0
+
 	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(background, "modulate:a", 1.0, 0.45)
 	tween.tween_property(title_card, "modulate:a", 1.0, 0.45)
-	tween.tween_property(prompt_label, "modulate:a", 1.0, 0.35)
-	menu_unlocked = true
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if not menu_unlocked or main_menu.visible:
-		return
-
-	var is_click: bool = event is InputEventMouseButton and event.pressed
-	var is_submit := event.is_action_pressed("ui_accept")
-	if is_click or is_submit:
-		_show_main_menu()
-		get_viewport().set_input_as_handled()
-
-
-func _show_main_menu() -> void:
-	main_menu.visible = true
-	title_card.visible = false
-	play_button.grab_focus()
+	tween.tween_property(menu_container, "modulate:a", 1.0, 0.45)
+	tween.finished.connect(func():
+		play_button.grab_focus()
+	)
 
 
 func _on_play_pressed() -> void:
+	SoundManager.play_ui_click()
 	StageManager.go_to_stage(&"tauracre")
 
 
 func _on_exit_pressed() -> void:
+	SoundManager.play_ui_click()
 	get_tree().quit()

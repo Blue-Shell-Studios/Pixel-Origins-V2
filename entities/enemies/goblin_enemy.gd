@@ -29,6 +29,7 @@ var _is_attacking := false
 var _last_side: float = 1.0
 var _sword_window_active := false
 var _sword_hit_ids: Dictionary = {}
+var _sword_hit_frame_fired := false
 var _hurt_stun_timer: float = 0.0
 var _charge_recovery_timer: float = 0.0
 var _is_charging := false
@@ -36,6 +37,9 @@ var _is_charging := false
 
 func _ready() -> void:
 	enemy_type = &"goblin"
+	attack_sfx_id = &"enemy_goblin_attack"
+	hit_sfx_id = &"enemy_hit"
+	defeat_sfx_id = &"enemy_goblin_defeat"
 	move_speed = MOVE_SPEED
 	aggro_range = AGGRO_RANGE
 	max_chase_distance = MAX_CHASE_DISTANCE
@@ -70,9 +74,12 @@ func _physics_process(delta: float) -> void:
 		_charge_recovery_timer -= delta
 		_is_charging = false
 		velocity = Vector2.ZERO
+		_sword_window_active = false
+		sword_area.monitoring = false
 		_update_animation()
 		return
 	super._physics_process(delta)
+	_update_sword_hit_window()
 	_update_animation()
 
 
@@ -128,6 +135,7 @@ func _try_side_swing(side: float) -> void:
 	if _sword_timer > 0.0 or _is_attacking or _is_hurt or _is_dead:
 		return
 
+	_play_attack_sfx()
 	_is_attacking = true
 	velocity = Vector2.ZERO
 	_update_sprite_facing(side)
@@ -135,17 +143,11 @@ func _try_side_swing(side: float) -> void:
 
 	sword_area.position = Vector2(side * SWORD_REACH, 0.0)
 	_sword_hit_ids.clear()
-	_sword_window_active = true
-	sword_area.monitoring = true
-	_apply_sword_overlap_damage()
+	_sword_window_active = false
+	_sword_hit_frame_fired = false
+	sword_area.monitoring = false
 
 	_sword_timer = SWORD_COOLDOWN
-	var tween := create_tween()
-	tween.tween_interval(SWORD_ACTIVE_TIME)
-	tween.tween_callback(func():
-		_sword_window_active = false
-		sword_area.monitoring = false
-	)
 
 
 func _try_apply_sword_damage(target: Node) -> void:
@@ -194,12 +196,16 @@ func take_damage(amount: int) -> void:
 	health -= max(1, amount)
 	if health <= 0:
 		health = 0
+		_play_defeat_sfx()
 		_die()
 		return
 
+	_play_hit_sfx()
 	_is_hurt = true
 	_hurt_stun_timer = HURT_STUN_TIME
 	_is_attacking = false
+	_sword_window_active = false
+	_sword_hit_frame_fired = false
 	sword_area.monitoring = false
 	_play_animation("hurt")
 
@@ -216,6 +222,7 @@ func _try_contact_damage() -> void:
 
 	if _is_charging and target_player.has_method("take_hit"):
 		target_player.take_hit(contact_damage, global_position, contact_knockback_force)
+		_play_attack_sfx()
 		_charge_recovery_timer = CHARGE_HIT_RECOVERY_TIME
 		velocity = Vector2.ZERO
 	else:
@@ -223,6 +230,7 @@ func _try_contact_damage() -> void:
 			target_player.take_damage(contact_damage)
 		elif target_player.has_method("take_hit"):
 			target_player.take_hit(contact_damage, global_position, 0.0)
+		_play_attack_sfx()
 
 	_contact_timer = contact_damage_cooldown
 
@@ -234,6 +242,8 @@ func _die() -> void:
 	is_aggro = false
 	target_player = null
 	velocity = Vector2.ZERO
+	_sword_window_active = false
+	_sword_hit_frame_fired = false
 	sword_area.monitoring = false
 	set_deferred("monitoring", false)
 	set_deferred("monitorable", false)
@@ -272,7 +282,25 @@ func _on_sprite_animation_finished() -> void:
 	match String(sprite.animation):
 		"attack":
 			_is_attacking = false
+			_sword_window_active = false
+			_sword_hit_frame_fired = false
+			sword_area.monitoring = false
 		"hurt":
 			_is_hurt = false
 		"dead":
 			queue_free()
+
+
+func _update_sword_hit_window() -> void:
+	var is_attack_anim := _is_attacking and String(sprite.animation) == "attack"
+	if not is_attack_anim:
+		_sword_window_active = false
+		sword_area.monitoring = false
+		return
+
+	var is_hit_frame := sprite.frame == 5
+	_sword_window_active = is_hit_frame
+	sword_area.monitoring = is_hit_frame
+	if is_hit_frame and not _sword_hit_frame_fired:
+		_apply_sword_overlap_damage()
+		_sword_hit_frame_fired = true

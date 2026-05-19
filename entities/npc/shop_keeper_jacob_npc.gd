@@ -22,7 +22,7 @@ func interact() -> void:
 	_record_npc_talk_event()
 	var lines := PackedStringArray([
 		"Welcome to my stall.",
-		"If you have 20 coins, I can set you up with a bow.",
+		"If you've got 20 coins, I can set you up with a sturdy bow.",
 	])
 	var resource := _build_dialogue_resource_from_lines(lines)
 	if resource != null:
@@ -38,7 +38,7 @@ func _show_shop() -> void:
 
 	var has_bow: bool = _nearby_player.has_method("has_weapon") and _nearby_player.has_weapon(BOW_ID)
 	if has_bow:
-		_shop_message.text = "You already own a bow."
+		_shop_message.text = "You already have a bow from me."
 		_buy_button.disabled = true
 		_buy_button.text = "Bought"
 	else:
@@ -61,17 +61,17 @@ func _on_buy_pressed() -> void:
 	if not _nearby_player.has_method("has_weapon"):
 		return
 	if _nearby_player.has_weapon(BOW_ID):
-		_shop_message.text = "You already own this."
+		_shop_message.text = "You already own this bow."
 		return
 	if not _nearby_player.has_method("try_spend_coins"):
-		_shop_message.text = "Cannot process purchase."
+		_shop_message.text = "I can't process that purchase right now."
 		return
 	if not _nearby_player.try_spend_coins(BOW_COST):
-		_shop_message.text = "Not enough coins."
+		_shop_message.text = "Looks like you're short on coins."
 		return
 
 	_nearby_player.grant_weapon(BOW_ID)
-	_shop_message.text = "Pleasure doing business. Bow acquired."
+	_shop_message.text = "Pleasure doing business. Take good care of that bow."
 	_buy_button.disabled = true
 	_buy_button.text = "Bought"
 

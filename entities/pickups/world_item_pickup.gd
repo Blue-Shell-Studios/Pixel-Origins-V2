@@ -56,6 +56,7 @@ func interact() -> void:
 	if not picked:
 		return
 
+	SoundManager.play_item_pickup()
 	_picked_up = true
 	InteractionManager.clear_active_interactable(self)
 	EventsManager.consume_spawn(_resolved_spawn_id)

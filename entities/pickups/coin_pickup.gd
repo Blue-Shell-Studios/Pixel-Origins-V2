@@ -84,6 +84,7 @@ func _on_body_entered(body: Node) -> void:
 func _collect() -> void:
 	if _player != null and _player.has_method("add_coins"):
 		_player.add_coins(value)
+	SoundManager.play_coin_pickup()
 	queue_free()
 
 

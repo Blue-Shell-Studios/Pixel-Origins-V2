@@ -15,7 +15,8 @@
 [ext_resource type="Script" uid="uid://dmiu2ax61vtp" path="res://entities/npc/scout_lyra_npc.gd" id="12_lyraq"]
 [ext_resource type="Script" uid="uid://cyp3q37yv3mi7" path="res://entities/npc/shop_keeper_jacob_npc.gd" id="13_jacobshop"]
 [ext_resource type="Script" uid="uid://0b1qcb5s5gu6" path="res://entities/npc/maid_therese_npc.gd" id="14_maidtherese"]
-[ext_resource type="PackedScene" path="res://entities/pickups/world_item_pickup.tscn" id="15_worlditem"]
+[ext_resource type="PackedScene" uid="uid://cn2h2u2s0l45v" path="res://entities/pickups/world_item_pickup.tscn" id="15_worlditem"]
+[ext_resource type="PackedScene" uid="uid://dtwl01uimd468" path="res://entities/interactables/help_bulletin_board.tscn" id="16_helpboard"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h12qe"]
 size = Vector2(112, 40)
@@ -13199,6 +13200,9 @@ size = Vector2(10, 7)
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_b717x"]
 height = 36.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ulkfn"]
+size = Vector2(24, 7)
+
 [node name="Tauracre" type="Node2D" unique_id=444771128]
 y_sort_enabled = true
 script = ExtResource("2_6j51c")
@@ -13273,7 +13277,7 @@ tile_map_data = PackedByteArray("AAAAAAIAAQAQAC0AAAABAP3/AQAiACsAAAABAP7/AQAiACw
 tile_set = SubResource("TileSet_ir45w")
 
 [node name="Player" parent="." unique_id=241669441 instance=ExtResource("1_0h33j")]
-position = Vector2(258, 207)
+position = Vector2(295, 220)
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1970904260]
 zoom = Vector2(4, 4)
@@ -13302,7 +13306,7 @@ collision_layer = 4
 collision_mask = 2
 script = ExtResource("3_2p8ld")
 npc_name = "Elder Mara"
-fallback_line = "The old roads still remember every traveler. Walk them with care."
+fallback_line = "These old roads remember every traveler. Walk them with steady feet, and they will guide you home."
 
 [node name="Sprite2D" type="Sprite2D" parent="NPCs/ElderMara" unique_id=1601483869]
 scale = Vector2(0.8, 0.8)
@@ -13325,7 +13329,7 @@ collision_layer = 4
 collision_mask = 2
 script = ExtResource("3_2p8ld")
 npc_name = "Blacksmith Tovin"
-fallback_line = "If your blade chips in Bramble Wilds, bring it back in one piece."
+fallback_line = "Heading into Bramble Wilds? Keep your blade sharp, and bring it back before it chips."
 
 [node name="Sprite2D" type="Sprite2D" parent="NPCs/BlacksmithTovin" unique_id=1971797909]
 scale = Vector2(0.8, 0.8)
@@ -13349,7 +13353,7 @@ collision_layer = 4
 collision_mask = 2
 script = ExtResource("14_maidtherese")
 npc_name = "Maid Therese"
-fallback_line = "You look exhausted. Let me patch you up."
+fallback_line = "You look tired, dear. Come here and let me patch you up."
 
 [node name="Sprite2D" type="Sprite2D" parent="NPCs/MaidTherese" unique_id=867244121]
 scale = Vector2(0.8, 0.8)
@@ -13373,7 +13377,7 @@ collision_layer = 4
 collision_mask = 2
 script = ExtResource("12_lyraq")
 npc_name = "Scout Lyra"
-fallback_line = "The forest shifts at dusk. Keep an eye on the moss, not the sky."
+fallback_line = "The forest shifts at dusk. Trust the moss, not the sky."
 
 [node name="Sprite2D" type="Sprite2D" parent="NPCs/ScoutLyra" unique_id=1904545252]
 scale = Vector2(0.8, 0.8)
@@ -13396,7 +13400,7 @@ collision_layer = 4
 collision_mask = 2
 script = ExtResource("13_jacobshop")
 npc_name = "Shop Keeper Jacob"
-fallback_line = "Welcome to my stall. If you are heading for the wilds, stock up before sunset."
+fallback_line = "Welcome to my stall. If you're heading into the wilds, stock up before sunset."
 
 [node name="Sprite2D" type="Sprite2D" parent="NPCs/ShopKeeperJacob" unique_id=747672169]
 scale = Vector2(0.8, 0.8)
@@ -13421,6 +13425,16 @@ y_sort_enabled = true
 position = Vector2(312, 232)
 spawn_id = &"tauracre_old_key_pickup"
 
+[node name="TownHelpBoard" parent="WorldItems" unique_id=1913948707 instance=ExtResource("16_helpboard")]
+position = Vector2(257, 204)
+
+[node name="BodyCollision" parent="WorldItems/TownHelpBoard" index="0" unique_id=667545533]
+position = Vector2(0, 0)
+
+[node name="CollisionShape2D" parent="WorldItems/TownHelpBoard/InteractArea" parent_id_path=PackedInt32Array(1913948707, 1700433780) index="0" unique_id=2105630930]
+position = Vector2(0, 2.5)
+shape = SubResource("RectangleShape2D_ulkfn")
+
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=720990039]
 
 [node name="Prompt" type="Label" parent="CanvasLayer" unique_id=1342287887]
@@ -13435,3 +13449,4 @@ script = ExtResource("4_fm3vq")
 default_text = "Press Interact to Talk"
 
 [editable path="VillageExit"]
+[editable path="WorldItems/TownHelpBoard"]

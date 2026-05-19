@@ -2,8 +2,8 @@ extends CharacterBody2D
 
 @export var move_speed: float = 100.0
 @export var starting_weapons: PackedStringArray = []
-@export var sword_damage: int = 1
-@export var bow_damage: int = 1
+@export var sword_damage: int = 5
+@export var bow_damage: int = 3
 @export var bow_arrow_speed: float = 250.0
 @export var bow_arrow_range: float = 500.0
 @export var max_health: int = 10
@@ -38,9 +38,11 @@ var inventory_items: Dictionary = {}
 var knockback_velocity: Vector2 = Vector2.ZERO
 var is_attacking: bool = false
 var is_hurt: bool = false
+var is_dead: bool = false
 var hurt_timer: float = 0.0
 var _sword_window_active := false
 var _sword_hit_ids: Dictionary = {}
+var _sword_hit_frame_fired := false
 var _action_slot_idle_style: StyleBox
 var _action_slot_active_style: StyleBox
 
@@ -65,6 +67,10 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if is_dead:
+		velocity = Vector2.ZERO
+		return
+
 	var input_dir := _get_input_dir()
 	if is_attacking or is_hurt:
 		input_dir = Vector2.ZERO
@@ -77,6 +83,7 @@ func _physics_process(delta: float) -> void:
 	velocity = move_velocity + knockback_velocity
 	_update_facing_from_input(input_dir)
 	move_and_slide()
+	_update_sword_hit_window()
 	_update_animation(input_dir)
 
 
@@ -180,6 +187,8 @@ func _select_slot(slot: int) -> void:
 
 
 func _try_attack_pressed() -> void:
+	if is_dead:
+		return
 	if is_hurt:
 		return
 	if not has_weapon(equipped_weapon):
@@ -199,6 +208,7 @@ func _do_sword_attack() -> void:
 	if is_attacking:
 		return
 
+	SoundManager.play_player_sword_attack()
 	hud_status_label.text = "Sword slash."
 	is_attacking = true
 	_play_animation("sword_attack_" + String(facing_axis))
@@ -212,16 +222,9 @@ func _activate_sword_slash() -> void:
 	sword_slash_area.position = dir * 8.0
 	sword_slash_area.rotation = dir.angle()
 	_sword_hit_ids.clear()
-	_sword_window_active = true
-	sword_slash_area.monitoring = true
-	_apply_sword_overlap_damage()
-
-	var tween := create_tween()
-	tween.tween_interval(0.1)
-	tween.tween_callback(func():
-		_sword_window_active = false
-		sword_slash_area.monitoring = false
-	)
+	_sword_hit_frame_fired = false
+	_sword_window_active = false
+	sword_slash_area.monitoring = false
 
 
 func _do_bow_attack() -> void:
@@ -237,6 +240,7 @@ func _do_bow_attack() -> void:
 	bow_aim_direction = dir4
 	_apply_bow_facing(dir4)
 
+	SoundManager.play_player_bow_attack()
 	hud_status_label.text = "Fired bow."
 	is_attacking = true
 	_play_animation("bow_attack_" + String(facing_axis))
@@ -269,6 +273,9 @@ func _on_sprite_animation_finished() -> void:
 
 	if String(sprite.animation).begins_with("sword_attack_") or String(sprite.animation).begins_with("bow_attack_"):
 		is_attacking = false
+		_sword_window_active = false
+		_sword_hit_frame_fired = false
+		sword_slash_area.monitoring = false
 
 
 func _configure_animation_loops() -> void:
@@ -324,6 +331,21 @@ func _on_sword_body_entered(body: Node2D) -> void:
 	_try_damage_target_once(body, sword_damage)
 
 
+func _update_sword_hit_window() -> void:
+	var is_sword_anim := is_attacking and String(sprite.animation).begins_with("sword_attack_")
+	if not is_sword_anim:
+		_sword_window_active = false
+		sword_slash_area.monitoring = false
+		return
+
+	var is_hit_frame := sprite.frame == 1
+	_sword_window_active = is_hit_frame
+	sword_slash_area.monitoring = is_hit_frame
+	if is_hit_frame and not _sword_hit_frame_fired:
+		_apply_sword_overlap_damage()
+		_sword_hit_frame_fired = true
+
+
 func _weapon_name(weapon_id: StringName) -> String:
 	match weapon_id:
 		&"sword":
@@ -354,6 +376,10 @@ func _refresh_hud() -> void:
 
 
 func take_damage(amount: int) -> void:
+	if is_dead:
+		return
+
+	SoundManager.play_player_hurt()
 	health -= max(1, amount)
 	if health < 0:
 		health = 0
@@ -363,12 +389,16 @@ func take_damage(amount: int) -> void:
 	_refresh_hud()
 
 	if health <= 0:
+		is_dead = true
 		hud_status_label.text = "You were defeated."
 		set_physics_process(false)
 		set_process_input(false)
+		DeathManager.show_death_screen()
 
 
 func take_hit(amount: int, source_global_position: Vector2, force: float = 280.0) -> void:
+	if is_dead:
+		return
 	take_damage(amount)
 	var away := global_position - source_global_position
 	if away == Vector2.ZERO:

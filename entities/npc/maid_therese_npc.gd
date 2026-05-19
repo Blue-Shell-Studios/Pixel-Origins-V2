@@ -18,8 +18,8 @@ func interact() -> void:
 	_record_npc_talk_event()
 	if _is_player_full_health():
 		var full_health_lines := PackedStringArray([
-			"Oh! You're already looking healthy and bright.",
-			"Take care out there, okay? Come back safe, cutie.",
+			"Oh, you're looking healthy already.",
+			"Take care out there, all right? Come back in one piece.",
 		])
 		var full_health_resource := _build_dialogue_resource_from_lines(full_health_lines)
 		if full_health_resource != null:
@@ -28,8 +28,8 @@ func interact() -> void:
 		return
 
 	var lines := PackedStringArray([
-		"You look worn from the road.",
-		"I can tend your wounds, free of charge.",
+		"You look worn out from the road.",
+		"Let me patch you up, free of charge.",
 	])
 	var resource := _build_dialogue_resource_from_lines(lines)
 	if resource != null:
@@ -65,7 +65,7 @@ func _hide_heal_prompt() -> void:
 func _on_yes_pressed() -> void:
 	if _nearby_player != null and _nearby_player.has_method("heal_to_full"):
 		_nearby_player.heal_to_full()
-	_heal_message.text = "All done. Please stay safe out there."
+	_heal_message.text = "All done. You should feel much better now."
 
 
 func _on_close_pressed() -> void:

@@ -2,6 +2,8 @@ extends Node
 
 var _has_session_state := false
 var _player_state: Dictionary = {}
+var _quest_state: Dictionary = {}
+var _events_state: Dictionary = {}
 
 
 func has_player_state() -> bool:
@@ -16,6 +18,7 @@ func capture_player_state(player: Node) -> void:
 		_player_state = player.get_session_state()
 	else:
 		_player_state = _capture_player_state_fallback(player)
+	_capture_world_state()
 	_has_session_state = true
 
 
@@ -34,7 +37,57 @@ func apply_player_state(player: Node) -> void:
 func clear_session_state() -> void:
 	_has_session_state = false
 	_player_state = {}
+	_quest_state = {}
+	_events_state = {}
 	EventsManager.clear_all()
+
+
+func create_snapshot(player: Node = null) -> Dictionary:
+	var snapshot := {
+		"player_state": {},
+		"quest_state": {},
+		"events_state": {},
+	}
+
+	if player != null:
+		if player.has_method("get_session_state"):
+			snapshot["player_state"] = player.get_session_state()
+		else:
+			snapshot["player_state"] = _capture_player_state_fallback(player)
+	elif _has_session_state:
+		snapshot["player_state"] = _player_state.duplicate(true)
+
+	if QuestManager.has_method("get_session_state"):
+		snapshot["quest_state"] = QuestManager.get_session_state()
+	if EventsManager.has_method("get_session_state"):
+		snapshot["events_state"] = EventsManager.get_session_state()
+	return snapshot
+
+
+func restore_snapshot(snapshot: Dictionary) -> void:
+	if snapshot.is_empty():
+		return
+
+	if snapshot.has("player_state"):
+		_player_state = (snapshot["player_state"] as Dictionary).duplicate(true)
+		_has_session_state = true
+
+	if snapshot.has("quest_state"):
+		_quest_state = (snapshot["quest_state"] as Dictionary).duplicate(true)
+		if QuestManager.has_method("apply_session_state"):
+			QuestManager.apply_session_state(_quest_state)
+
+	if snapshot.has("events_state"):
+		_events_state = (snapshot["events_state"] as Dictionary).duplicate(true)
+		if EventsManager.has_method("apply_session_state"):
+			EventsManager.apply_session_state(_events_state)
+
+
+func _capture_world_state() -> void:
+	if QuestManager.has_method("get_session_state"):
+		_quest_state = QuestManager.get_session_state()
+	if EventsManager.has_method("get_session_state"):
+		_events_state = EventsManager.get_session_state()
 
 
 func _capture_player_state_fallback(player: Node) -> Dictionary:

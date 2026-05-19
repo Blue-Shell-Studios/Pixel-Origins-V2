@@ -12,6 +12,9 @@ var max_health: int
 var contact_damage: int
 var contact_damage_cooldown: float
 var contact_knockback_force: float
+var attack_sfx_id: StringName = &""
+var hit_sfx_id: StringName = &""
+var defeat_sfx_id: StringName = &""
 
 @onready var vision_shape: CollisionShape2D = $VisionArea/CollisionShape2D
 @onready var body_visual: Node2D = get_node_or_null("Body") as Node2D
@@ -105,9 +108,12 @@ func _update_facing() -> void:
 func take_damage(amount: int) -> void:
 	health -= max(1, amount)
 	if health <= 0:
+		_play_defeat_sfx()
 		_report_defeat()
 		_drop_coin_loot(1, 2)
 		queue_free()
+		return
+	_play_hit_sfx()
 
 
 func _try_contact_damage() -> void:
@@ -125,6 +131,7 @@ func _try_contact_damage() -> void:
 		return
 
 	target_player.take_hit(contact_damage, global_position, contact_knockback_force)
+	_play_attack_sfx()
 	_contact_timer = contact_damage_cooldown
 
 
@@ -157,3 +164,24 @@ func _report_defeat() -> void:
 	if enemy_type.is_empty():
 		return
 	QuestManager.record_enemy_kill(enemy_type)
+
+
+func _play_attack_sfx() -> void:
+	if attack_sfx_id.is_empty():
+		SoundManager.play_enemy_attack()
+		return
+	SoundManager.play_sfx(attack_sfx_id)
+
+
+func _play_hit_sfx() -> void:
+	if hit_sfx_id.is_empty():
+		SoundManager.play_enemy_hit()
+		return
+	SoundManager.play_sfx(hit_sfx_id)
+
+
+func _play_defeat_sfx() -> void:
+	if defeat_sfx_id.is_empty():
+		SoundManager.play_enemy_defeat()
+		return
+	SoundManager.play_sfx(defeat_sfx_id)

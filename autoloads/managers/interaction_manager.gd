@@ -33,5 +33,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not active_interactable.has_method("interact"):
 		return
 
+	SoundManager.play_interact()
 	active_interactable.interact()
 	get_viewport().set_input_as_handled()

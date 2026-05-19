@@ -89,6 +89,22 @@ func clear_all() -> void:
 	_consumed_spawns.clear()
 
 
+func get_session_state() -> Dictionary:
+	return {
+		"events": _events.duplicate(true),
+		"consumed_spawns": _consumed_spawns.duplicate(true),
+	}
+
+
+func apply_session_state(state: Dictionary) -> void:
+	_events.clear()
+	_consumed_spawns.clear()
+	if state.has("events"):
+		_events = (state["events"] as Dictionary).duplicate(true)
+	if state.has("consumed_spawns"):
+		_consumed_spawns = (state["consumed_spawns"] as Dictionary).duplicate(true)
+
+
 func _normalize_token(token: StringName) -> StringName:
 	var value := String(token).strip_edges()
 	if value.is_empty():

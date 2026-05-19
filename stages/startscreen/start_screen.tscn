@@ -1,84 +1,55 @@
-[gd_scene load_steps=2 format=3 uid="uid://cvwwotb1tgfg2"]
+[gd_scene format=3 uid="uid://cvwwotb1tgfg2"]
 
-[ext_resource type="Script" path="res://stages/startscreen/start_screen.gd" id="1_2l2eu"]
+[ext_resource type="Script" uid="uid://cho5pomxg4vrh" path="res://stages/startscreen/start_screen.gd" id="1_2l2eu"]
+[ext_resource type="Texture2D" uid="uid://blgy20ucy08jl" path="res://assets/Title Screen Background/pixel-meadow-sunset-stockcake.webp" id="2_5al05"]
+[ext_resource type="FontFile" uid="uid://0q2tpaghfflr" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="3_yept1"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_jrp1r"]
+font = ExtResource("3_yept1")
+font_size = 72
 
 [node name="StartScreen" type="Node2D" unique_id=138181615]
 script = ExtResource("1_2l2eu")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=56481180]
 
-[node name="Backdrop" type="ColorRect" parent="CanvasLayer"]
-offset_right = 1152.0
-offset_bottom = 648.0
-color = Color(0.0627451, 0.0901961, 0.129412, 1)
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer" unique_id=887925389]
+offset_right = 1154.0
+offset_bottom = 653.0
+texture = ExtResource("2_5al05")
 
-[node name="TitleCard" type="Panel" parent="CanvasLayer"]
+[node name="TitleCard" type="Control" parent="CanvasLayer" unique_id=803440525]
+layout_mode = 3
+anchors_preset = 0
 offset_left = 256.0
 offset_top = 156.0
 offset_right = 896.0
 offset_bottom = 396.0
 
-[node name="Title" type="Label" parent="CanvasLayer/TitleCard"]
+[node name="Title" type="Label" parent="CanvasLayer/TitleCard" unique_id=1045842537]
 layout_mode = 0
-offset_left = 88.0
-offset_top = 64.0
-offset_right = 551.0
-offset_bottom = 132.0
+offset_left = -249.0
+offset_right = 894.0
+offset_bottom = 72.0
 theme_override_font_sizes/font_size = 54
 text = "PIXEL ORIGINS"
+label_settings = SubResource("LabelSettings_jrp1r")
 horizontal_alignment = 1
 
-[node name="Subtitle" type="Label" parent="CanvasLayer/TitleCard"]
-layout_mode = 0
-offset_left = 166.0
-offset_top = 134.0
-offset_right = 473.0
-offset_bottom = 167.0
-theme_override_font_sizes/font_size = 24
-text = "An Adventure Begins"
-horizontal_alignment = 1
-
-[node name="Prompt" type="Label" parent="CanvasLayer/TitleCard"]
-layout_mode = 0
-offset_left = 166.0
-offset_top = 188.0
-offset_right = 473.0
-offset_bottom = 218.0
-theme_override_font_sizes/font_size = 20
-text = "Click to Continue"
-horizontal_alignment = 1
-
-[node name="MainMenu" type="Panel" parent="CanvasLayer"]
-offset_left = 376.0
-offset_top = 168.0
-offset_right = 776.0
-offset_bottom = 480.0
-
-[node name="MenuTitle" type="Label" parent="CanvasLayer/MainMenu"]
-layout_mode = 0
-offset_left = 114.0
-offset_top = 36.0
-offset_right = 286.0
-offset_bottom = 84.0
-theme_override_font_sizes/font_size = 40
-text = "Main Menu"
-horizontal_alignment = 1
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenu"]
-layout_mode = 0
-offset_left = 100.0
-offset_top = 112.0
-offset_right = 300.0
-offset_bottom = 248.0
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer" unique_id=1134108861]
+offset_left = 392.0
+offset_top = 373.0
+offset_right = 800.0
+offset_bottom = 509.0
 theme_override_constants/separation = 16
 
-[node name="PlayButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
+[node name="PlayButton" type="Button" parent="CanvasLayer/VBoxContainer" unique_id=1133995942]
 custom_minimum_size = Vector2(200, 56)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Play"
 
-[node name="ExitButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
+[node name="ExitButton" type="Button" parent="CanvasLayer/VBoxContainer" unique_id=862869601]
 custom_minimum_size = Vector2(200, 56)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24

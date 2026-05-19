@@ -13,6 +13,9 @@ const AGGRO_RANGE := 220.0
 
 func _ready() -> void:
 	enemy_type = &"forest_wisp"
+	attack_sfx_id = &"enemy_forest_wisp_attack"
+	hit_sfx_id = &"enemy_hit"
+	defeat_sfx_id = &"enemy_forest_wisp_defeat"
 	move_speed = MOVE_SPEED
 	aggro_range = AGGRO_RANGE
 	max_chase_distance = MAX_CHASE_DISTANCE
