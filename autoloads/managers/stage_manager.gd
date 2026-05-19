@@ -5,6 +5,7 @@ const STAGES := {
 	"overworld": "res://stages/overworld/overworld.tscn",
 	"bramble_wilds": "res://stages/bramblewilds/bramble_wilds.tscn",
 	"tauracre": "res://stages/tauracre/tauracre.tscn",
+	"ancient_ruins": "res://stages/ancientRuins/ancient_ruins.tscn",
 }
 
 var current_stage_id: StringName = &""
