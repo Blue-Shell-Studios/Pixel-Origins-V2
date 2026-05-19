@@ -596,6 +596,7 @@ collision_mask = 4
 shape = SubResource("CircleShape2D_sword_slash")
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=407353429]
+visible = false
 
 [node name="HUDRoot" type="Panel" parent="HUD" unique_id=1424235293]
 offset_left = 12.0
