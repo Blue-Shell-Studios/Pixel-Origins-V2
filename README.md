@@ -64,9 +64,16 @@ A 2D top-down action RPG prototype built in Godot 4.6.
   - `SignalBus` for UI/gameplay events
 
 ## Run locally
+### Using Godot
+1. Clone the repository
+2. Open the project folder in Godot 4.6.
+3. Run the project (`F5`) from the editor.
 
-1. Open the project folder in Godot 4.6.
-2. Run the project (`F5`) from the editor.
+### From releases section
+1. Navigate to the releases section
+2. Open the latest version
+3. Download executable file - PixelOrigins.exe
+4. Open the downloaded executable file
 
 ## Assets Information
 
@@ -84,3 +91,7 @@ The table below lists the assets used for **Pixel Origins**, sourced primarily f
 | [Super Retro World Character pack](https://gif-superretroworld.itch.io/character-pack) | Basic NPC sprites | By Gif |
 | [RPG Dungeon Pack](https://gif-superretroworld.itch.io/dungeon-pack) | Dungeon / Arena tileset | By Gif (@gif_not_jif), Noiracide (@Noiracide), and Romi (@DessRomaric) |
 | [RPG Interior Pack](https://gif-superretroworld.itch.io/interior-pack) | House interior and walls | By The low-res arist (Twitter @Pixelart_asset) |
+| [Necromancer Boss Sheet](https://creativekind.itch.io/necromancer-free) | Animated character sprite for boss battle | By CreativeKind |
+| [Pixel Meadow Sunset](https://stockcake.com/i/pixel-meadow-sunset_2513211_1497930) | Start Screen Background | StockCake |
+| [Pixabay](https://pixabay.com/) | Royalty Free Musics and SFXs | Pixabay |
+| [Mixkit](https://mixkit.co/) | Royalty Free Musics and SFXs | Mixkit |
