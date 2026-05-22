@@ -98,4 +98,4 @@ From the `README.md` asset table in this snapshot:
 - License in repository: MIT (`addons/dialogue_manager/LICENSE`).
 
 ### Playtester acknowledgments
-- Empty
+- Blue Shell Studios extends its deepest gratitude to CMSC 197—Game Design and Development classmates, Adobo ni John Clyde, and Sir Ren, who provided feedback on early versions of the game and guidance throughout the development process, which made this project possible.

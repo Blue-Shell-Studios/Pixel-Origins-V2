@@ -232,7 +232,11 @@ flowchart TD
 - Dialogue Manager plugin (`addons/dialogue_manager`) by Nathan Hoad and contributors (MIT license)
 
 ### Playtester acknowledgments
-- None (Add Here)
+- Blue Shell Studios express gratitude to the following:
+  - CMSC 197 Game Design and Development Family
+  - Adobo ni John Clyde
+  - Sir Ren
+- This project is made possible because of their feedback and support.
 
 ## 12. Final Postmortem Summary
 Pixel Origins met its core objective as a playable action-RPG vertical slice with questing, progression, combat variation, multi-stage traversal, and a climactic boss sequence. The strongest outcomes came from iterative milestone reviews and decisive scope control. The biggest growth area was architecture planning cadence: earlier modularization and stronger data-driven systems would reduce late-stage migration load and improve long-term maintainability.
