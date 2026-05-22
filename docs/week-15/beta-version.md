@@ -93,3 +93,16 @@
 - Document feature-lock decisions and explicit cuts (especially persistence scope).
 - Prepare a known-issues slide with risk ownership and post-beta fix plan.
 - Capture short gameplay clips/screenshots from the conflict-resolved build for Week 16 presentation.
+
+### Screenshots
+- Overworld
+![overworld](overworld.png)
+
+- Forest
+![forest](forest.png)
+
+- Town
+![town](town.png)
+
+- Quests
+![Quests](beta_quest.png)

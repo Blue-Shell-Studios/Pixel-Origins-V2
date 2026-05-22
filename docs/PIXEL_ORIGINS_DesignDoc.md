@@ -232,7 +232,7 @@ flowchart TD
 - Dialogue Manager plugin (`addons/dialogue_manager`) by Nathan Hoad and contributors (MIT license)
 
 ### Playtester acknowledgments
-- Blue Shell Studios express gratitude to the following:
+- Blue Shell Studios expresses gratitude to the following:
   - CMSC 197 Game Design and Development Family
   - Adobo ni John Clyde
   - Sir Ren
