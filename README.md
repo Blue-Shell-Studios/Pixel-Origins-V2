@@ -64,9 +64,16 @@ A 2D top-down action RPG prototype built in Godot 4.6.
   - `SignalBus` for UI/gameplay events
 
 ## Run locally
+### Using Godot
+1. Clone the repository
+2. Open the project folder in Godot 4.6.
+3. Run the project (`F5`) from the editor.
 
-1. Open the project folder in Godot 4.6.
-2. Run the project (`F5`) from the editor.
+### From releases section
+1. Navigate to the releases section
+2. Open the latest version
+3. Download executable file - PixelOrigins.exe
+4. Open the downloaded executable file
 
 ## Assets Information
 
